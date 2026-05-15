@@ -1,6 +1,14 @@
-<div class="border-t border-gray-300 mt-4 py-4">
-  <div class="max-w-4xl px-4 mx-auto text-xs text-gray-400">Your footer content here.</div>
-</div>
+<?php
+  // Logo URL — uploaded to WP Media Library
+  $footer_logo_url = '/wp-content/uploads/2026/05/828_Logotipo_blanco-scaled.png';
+?>
+
+<!-- Footer React mount point -->
+<div
+  id="render-footer-here"
+  data-logo-url="<?php echo esc_url($footer_logo_url); ?>"
+></div>
+<!-- end footer mount point -->
 
 <?php wp_footer(); ?>
 </body>

@@ -1,2 +1,31 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+/* ─── 828 Marketing Solutions — Brand System ─────────────────────────────
+   Source: 828 Marketing Solutions Branding (Noventa10 Casa de diseño)
+   ───────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  /* Brand color palette (named per branding deck) */
+  --color-midnight-logic: #1A1C29;   /* primary dark — backgrounds, headings */
+  --color-deep-insight: #093D62;     /* primary accent blue */
+  --color-strategic-blue: #456D87;   /* secondary blue — hovers, mid tones */
+  --color-metric-steel: #6D7A8A;     /* neutral steel — secondary text, borders */
+  --color-growth-signal: #A3CB37;    /* lime green accent — micro-elements, hovers */
+
+  /* Font families */
+  --font-heading: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  --font-body: "Manrope", "Helvetica Neue", "Arial", sans-serif;
+}
+
+/* Apply brand fonts globally */
+html {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.01em;
+}
