@@ -42,10 +42,10 @@ const ChevronDown = () => (
 )
 
 // ─── Reusable form field components ───────────────────────────────────────
-function Field({ label, required, children, full = false }) {
+function Field({ label, required, children, full = false, compact = false }) {
   return (
     <div className={full ? "sm:col-span-2" : ""}>
-      <label className="block text-[11px] font-semibold tracking-[0.08em] uppercase text-[#1A1C29]/70 mb-1.5">
+      <label className={`block text-[10px] font-semibold tracking-[0.08em] uppercase text-[#1A1C29]/70 ${compact ? "mb-1" : "mb-1.5"}`}>
         {label}
         {required && <span className="text-[#A3CB37] ml-0.5">*</span>}
       </label>
@@ -57,7 +57,11 @@ function Field({ label, required, children, full = false }) {
 const inputClass =
   "w-full px-3.5 py-2.5 text-sm text-[#1A1C29] bg-white border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:border-[#1A1C29] focus:ring-2 focus:ring-[#1A1C29]/10 transition-all duration-150"
 
+const inputClassCompact =
+  "w-full px-3 py-2 text-sm text-[#1A1C29] bg-white border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:border-[#1A1C29] focus:ring-2 focus:ring-[#1A1C29]/10 transition-all duration-150"
+
 const selectClass = inputClass + " appearance-none pr-9 cursor-pointer"
+const selectClassCompact = inputClassCompact + " appearance-none pr-9 cursor-pointer"
 
 // ─── Component ─────────────────────────────────────────────────────────────
 function ContactForm({ variant = "section" }) {
@@ -65,6 +69,8 @@ function ContactForm({ variant = "section" }) {
   const [agreed, setAgreed] = useState(false)
 
   const isHero = variant === "hero"
+  const inputCls = isHero ? inputClassCompact : inputClass
+  const selectCls = isHero ? selectClassCompact : selectClass
 
   return (
     <form
@@ -72,7 +78,7 @@ function ContactForm({ variant = "section" }) {
       method="POST"
       className={`bg-white rounded-2xl ${
         isHero
-          ? "p-6 sm:p-7 shadow-2xl ring-1 ring-black/5"
+          ? "p-5 sm:p-6 shadow-2xl ring-1 ring-black/5"
           : "p-8 sm:p-10 shadow-xl border border-gray-200"
       }`}
     >
@@ -90,59 +96,59 @@ function ContactForm({ variant = "section" }) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Field label="Name" required>
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${isHero ? "gap-3" : "gap-4"}`}>
+        <Field label="Name" required compact={isHero}>
           <input
             type="text"
             name="name"
             required
-            className={inputClass}
+            className={inputCls}
             placeholder="Your full name"
           />
         </Field>
 
-        <Field label="Business Name" required>
+        <Field label="Business Name" required compact={isHero}>
           <input
             type="text"
             name="business_name"
             required
-            className={inputClass}
+            className={inputCls}
             placeholder="Company name"
           />
         </Field>
 
-        <Field label="Phone Number" required>
+        <Field label="Phone Number" required compact={isHero}>
           <input
             type="tel"
             name="phone"
             required
-            className={inputClass}
+            className={inputCls}
             placeholder="(555) 123-4567"
           />
         </Field>
 
-        <Field label="Email" required>
+        <Field label="Email" required compact={isHero}>
           <input
             type="email"
             name="email"
             required
-            className={inputClass}
+            className={inputCls}
             placeholder="you@business.com"
           />
         </Field>
 
-        <Field label="Website" full>
+        <Field label="Website" full compact={isHero}>
           <input
             type="url"
             name="website"
-            className={inputClass}
+            className={inputCls}
             placeholder="https://yourbusiness.com"
           />
         </Field>
 
-        <Field label="Service Required" required>
+        <Field label="Service Required" required compact={isHero}>
           <div className="relative">
-            <select name="service" required defaultValue="" className={selectClass}>
+            <select name="service" required defaultValue="" className={selectCls}>
               <option value="" disabled>
                 Select a service
               </option>
@@ -156,9 +162,9 @@ function ContactForm({ variant = "section" }) {
           </div>
         </Field>
 
-        <Field label="Annual Revenue" required>
+        <Field label="Annual Revenue" required compact={isHero}>
           <div className="relative">
-            <select name="revenue" required defaultValue="" className={selectClass}>
+            <select name="revenue" required defaultValue="" className={selectCls}>
               <option value="" disabled>
                 Select range
               </option>
@@ -172,19 +178,19 @@ function ContactForm({ variant = "section" }) {
           </div>
         </Field>
 
-        <Field label="City" required>
+        <Field label="City" required compact={isHero}>
           <input
             type="text"
             name="city"
             required
-            className={inputClass}
+            className={inputCls}
             placeholder="Your city"
           />
         </Field>
 
-        <Field label="State" required>
+        <Field label="State" required compact={isHero}>
           <div className="relative">
-            <select name="state" required defaultValue="" className={selectClass}>
+            <select name="state" required defaultValue="" className={selectCls}>
               <option value="" disabled>
                 Select state
               </option>
@@ -198,11 +204,11 @@ function ContactForm({ variant = "section" }) {
           </div>
         </Field>
 
-        <Field label="Message" full>
+        <Field label="Message" full compact={isHero}>
           <textarea
             name="message"
-            rows={isHero ? 3 : 4}
-            className={inputClass + " resize-none"}
+            rows={isHero ? 2 : 4}
+            className={inputCls + " resize-none"}
             placeholder="Tell us about your goals, challenges, or what you're looking to achieve."
           />
         </Field>
@@ -241,11 +247,11 @@ function ContactForm({ variant = "section" }) {
         </div>
 
         {/* Submit */}
-        <div className="sm:col-span-2 mt-2">
+        <div className={`sm:col-span-2 ${isHero ? "mt-1" : "mt-2"}`}>
           <button
             type="submit"
             disabled={!agreed}
-            className="group w-full inline-flex items-center justify-center gap-2 bg-[#1A1C29] text-white px-6 py-3.5 rounded-full font-semibold text-sm hover:bg-[#093D62] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#1A1C29] disabled:hover:translate-y-0 disabled:hover:shadow-none"
+            className={`group w-full inline-flex items-center justify-center gap-2 bg-[#1A1C29] text-white ${isHero ? "px-5 py-3" : "px-6 py-3.5"} rounded-full font-semibold text-sm hover:bg-[#093D62] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#1A1C29] disabled:hover:translate-y-0 disabled:hover:shadow-none`}
           >
             Submit Request
             <svg

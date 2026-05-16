@@ -3,13 +3,7 @@
  * Template Name: Home
  *
  * Custom home page template for 828 Marketing Solutions.
- *
- * IMAGE PLACEHOLDERS — replace these URLs with WordPress Media Library URLs:
- * - $about_image_url
- * - $why_us_image_url
  */
-
-get_header();
 
 // ───────────────────────────────────────────────────────────────────────────
 // HERO BACKGROUND IMAGE — replace with WP Media Library URL
@@ -23,14 +17,22 @@ $hero_bg_url       = '/wp-content/uploads/2026/05/HomePageHero-scaled.png'; // e
 // ───────────────────────────────────────────────────────────────────────────
 $about_image_url   = 'https://via.placeholder.com/800x900/1A1C29/ffffff?text=About+Us+Image';
 $why_us_image_url  = 'https://via.placeholder.com/800x1000/1A1C29/ffffff?text=Why+Us+Image';
+
+get_header();
+
+// DEBUG: confirm this template is loading (remove after testing)
+echo '<!-- DEBUG: home-template.php IS loading. hero_bg_url length = ' . strlen($hero_bg_url) . ' -->';
 ?>
 
 <main>
 
   <!-- ═══════════════════════════════════════════════════════════════════════
-       HERO SECTION
+       HERO SECTION — fills viewport minus navbar height
+       Navbar total height: top bar (~36px) + main nav (64px lg / 80px xl)
+       Approximate total: ~100px lg / ~116px xl
+       We use min-h-[calc()] so the hero always reaches the bottom of the fold.
        ═══════════════════════════════════════════════════════════════════════ -->
-  <section class="relative bg-[#1A1C29] text-white overflow-hidden">
+  <section class="relative bg-[#1A1C29] text-white overflow-hidden flex items-center min-h-[calc(100vh-100px)]">
 
     <?php if (!empty($hero_bg_url)): ?>
       <!-- Background image (the "estampado") -->
@@ -41,17 +43,18 @@ $why_us_image_url  = 'https://via.placeholder.com/800x1000/1A1C29/ffffff?text=Wh
           class="w-full h-full object-cover object-center"
           aria-hidden="true"
         />
-        <!-- Multi-layer overlay for legibility over any background image -->
-        <div class="absolute inset-0 bg-[#1A1C29]/75"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-[#1A1C29] via-[#1A1C29]/80 to-[#1A1C29]/40"></div>
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#1A1C29]"></div>
+        <!-- Light overall tint: just enough to keep brand feel without hiding the estampado -->
+        <div class="absolute inset-0 bg-[#1A1C29]/30"></div>
+        <!-- Localized darkening on the left where the headline lives -->
+        <div class="absolute inset-0 bg-gradient-to-r from-[#1A1C29]/70 via-[#1A1C29]/20 to-transparent"></div>
       </div>
     <?php else: ?>
       <!-- Fallback gradient when no background image is set -->
       <div class="absolute inset-0 bg-gradient-to-br from-[#1A1C29] via-[#093D62] to-[#1A1C29]"></div>
     <?php endif; ?>
 
-    <!-- Subtle circuit-board texture -->
+    <?php if (empty($hero_bg_url)): ?>
+    <!-- Subtle circuit-board texture (only when no hero image, otherwise the image is the texture) -->
     <svg class="absolute inset-0 w-full h-full opacity-[0.04] pointer-events-none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
         <pattern id="hero-circuit" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
@@ -65,18 +68,19 @@ $why_us_image_url  = 'https://via.placeholder.com/800x1000/1A1C29/ffffff?text=Wh
       </defs>
       <rect width="100%" height="100%" fill="url(#hero-circuit)" />
     </svg>
+    <?php endif; ?>
 
     <!-- Soft glow accent -->
     <div class="absolute top-1/3 -left-40 w-[600px] h-[600px] rounded-full pointer-events-none" style="background: radial-gradient(circle, rgba(9,61,98,0.15) 0%, rgba(9,61,98,0) 60%);" aria-hidden="true"></div>
 
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+    <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 lg:items-stretch">
 
         <!-- LEFT: BBB badge, headline, subheadline, CTAs -->
-        <div class="lg:col-span-6">
+        <div class="lg:col-span-6 flex flex-col lg:justify-between">
 
-          <!-- BBB Accredited badge -->
-          <div class="inline-flex items-center gap-2.5 bg-white/10 border border-white/15 rounded-full px-4 py-2 mb-7 backdrop-blur-sm">
+          <!-- BBB Accredited badge (TOP) -->
+          <div class="inline-flex items-center gap-2.5 bg-white/10 border border-white/15 rounded-full px-4 py-2 mb-7 backdrop-blur-sm self-start">
             <span class="relative flex w-2 h-2">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#A3CB37] opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2 w-2 bg-[#A3CB37]"></span>
@@ -87,18 +91,21 @@ $why_us_image_url  = 'https://via.placeholder.com/800x1000/1A1C29/ffffff?text=Wh
             <span class="text-xs font-semibold tracking-wide">BBB Accredited Business</span>
           </div>
 
-          <!-- Headline -->
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05] mb-6">
-            Strategic Marketing for <span class="italic font-light text-white/80">Scalable Business Growth</span>
-          </h1>
+          <!-- MIDDLE: Headline + Subheadline (vertically centered between badge and CTAs) -->
+          <div class="lg:flex-1 lg:flex lg:flex-col lg:justify-center">
+            <!-- Headline -->
+            <h1 class="text-4xl sm:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-bold tracking-tight leading-[1.05] mb-5">
+              Strategic Marketing for <span class="italic font-light text-white/80">Scalable Business Growth</span>
+            </h1>
 
-          <!-- Subheadline -->
-          <p class="text-base sm:text-lg text-white/75 leading-relaxed mb-8 max-w-xl">
-            We help companies grow with marketing systems built on market intelligence, strategic clarity, and disciplined execution.
-          </p>
+            <!-- Subheadline -->
+            <p class="text-base lg:text-base xl:text-lg text-white/75 leading-relaxed max-w-xl">
+              We help companies grow with marketing systems built on market intelligence, strategic clarity, and disciplined execution.
+            </p>
+          </div>
 
-          <!-- CTAs -->
-          <div class="flex flex-col sm:flex-row gap-3">
+          <!-- CTAs (BOTTOM) -->
+          <div class="flex flex-col sm:flex-row gap-3 mt-8 lg:mt-0">
             <a href="#contact" class="group inline-flex items-center justify-center gap-2 bg-white text-[#1A1C29] px-7 py-3.5 rounded-full font-semibold text-sm hover:bg-[#093D62] hover:text-white transition-all duration-200">
               Schedule a Consultation
               <svg class="w-4 h-4 transform transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -335,10 +342,9 @@ $why_us_image_url  = 'https://via.placeholder.com/800x1000/1A1C29/ffffff?text=Wh
       </div>
 
       <!-- Trustindex plugin shortcode — replace with actual shortcode -->
-      <div class="trustindex-container">
-        <?php echo do_shortcode('[trustindex no-registration=google]'); ?>
+      <div class="st-reviews" style="--st-review-pattern:url('<?php echo esc_url($img['pattern_reviews']); ?>'); --st-review-stamp:url('<?php echo esc_url($img['stamp_round']); ?>')">
+        <?php echo do_shortcode('[trustindex no-registration=google]'); ?>        
       </div>
-    </div>
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════

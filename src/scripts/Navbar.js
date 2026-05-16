@@ -109,12 +109,12 @@ const ArrowRight = () => (
 )
 
 const SERVICES = [
-  { label: "Industry Report", href: "#", Icon: ServiceIcon01 },
-  { label: "Brand Identity & Positioning", href: "#", Icon: ServiceIcon02 },
-  { label: "Website Development & SEO", href: "#", Icon: ServiceIcon03 },
-  { label: "Social Media Management", href: "#", Icon: ServiceIcon04 },
-  { label: "Paid Advertisement", href: "#", Icon: ServiceIcon05 },
-  { label: "Pitch Deck & Capabilities Development", href: "#", Icon: ServiceIcon06 },
+  { label: "Industry Report",                       href: "/services/industry-report/",                       Icon: ServiceIcon01 },
+  { label: "Brand Identity & Positioning",          href: "/services/brand-identity-and-positioning/",        Icon: ServiceIcon02 },
+  { label: "Website Development & SEO",             href: "/services/website-development-and-seo/",           Icon: ServiceIcon03 },
+  { label: "Social Media Management",               href: "/services/social-media-management/",               Icon: ServiceIcon04 },
+  { label: "Paid Advertisement",                    href: "/services/paid-advertisement/",                    Icon: ServiceIcon05 },
+  { label: "Pitch Deck & Capabilities Development", href: "/services/pitch-deck-and-capabilities-development/", Icon: ServiceIcon06 },
 ]
 
 // Social links from user
@@ -151,6 +151,7 @@ function Navbar({ logoUrl, homeUrl = "/" }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const servicesRef = useRef(null)
+  const megamenuRef = useRef(null)
 
   // Sticky shadow effect on scroll
   useEffect(() => {
@@ -162,7 +163,12 @@ function Navbar({ logoUrl, homeUrl = "/" }) {
   // Close dropdown on outside click
   useEffect(() => {
     const onClick = (e) => {
-      if (servicesRef.current && !servicesRef.current.contains(e.target)) {
+      if (
+        servicesRef.current &&
+        !servicesRef.current.contains(e.target) &&
+        megamenuRef.current &&
+        !megamenuRef.current.contains(e.target)
+      ) {
         setServicesOpen(false)
       }
     }
@@ -218,14 +224,14 @@ function Navbar({ logoUrl, homeUrl = "/" }) {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 lg:h-24">
+          <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
             <a href={homeUrl} className="flex items-center shrink-0 group">
               {logoUrl ? (
                 <img
                   src={logoUrl}
                   alt="828 Marketing Solutions"
-                  className="h-14 lg:h-16 w-auto transition-transform duration-300 group-hover:scale-105"
+                  className="h-12 lg:h-14 w-auto transition-transform duration-300 group-hover:scale-105"
                 />
               ) : (
                 <div className="flex items-center gap-2">
@@ -362,6 +368,7 @@ function Navbar({ logoUrl, homeUrl = "/" }) {
 
         {/* MEGAMENU PANEL — contained width, opens below the navbar */}
         <div
+          ref={megamenuRef}
           className={`hidden lg:block absolute left-0 right-0 top-full transition-all duration-200 origin-top ${
             servicesOpen
               ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"

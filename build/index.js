@@ -44,12 +44,13 @@ function Field({
   label,
   required,
   children,
-  full = false
+  full = false,
+  compact = false
 }) {
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
     className: full ? "sm:col-span-2" : "",
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
-      className: "block text-[11px] font-semibold tracking-[0.08em] uppercase text-[#1A1C29]/70 mb-1.5",
+      className: `block text-[10px] font-semibold tracking-[0.08em] uppercase text-[#1A1C29]/70 ${compact ? "mb-1" : "mb-1.5"}`,
       children: [label, required && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
         className: "text-[#A3CB37] ml-0.5",
         children: "*"
@@ -58,7 +59,9 @@ function Field({
   });
 }
 const inputClass = "w-full px-3.5 py-2.5 text-sm text-[#1A1C29] bg-white border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:border-[#1A1C29] focus:ring-2 focus:ring-[#1A1C29]/10 transition-all duration-150";
+const inputClassCompact = "w-full px-3 py-2 text-sm text-[#1A1C29] bg-white border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:border-[#1A1C29] focus:ring-2 focus:ring-[#1A1C29]/10 transition-all duration-150";
 const selectClass = inputClass + " appearance-none pr-9 cursor-pointer";
+const selectClassCompact = inputClassCompact + " appearance-none pr-9 cursor-pointer";
 
 // ─── Component ─────────────────────────────────────────────────────────────
 function ContactForm({
@@ -67,10 +70,12 @@ function ContactForm({
   // variant: "hero" (compact, on white card over hero) | "section" (full-width section)
   const [agreed, setAgreed] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const isHero = variant === "hero";
+  const inputCls = isHero ? inputClassCompact : inputClass;
+  const selectCls = isHero ? selectClassCompact : selectClass;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("form", {
     action: "/thank-you",
     method: "POST",
-    className: `bg-white rounded-2xl ${isHero ? "p-6 sm:p-7 shadow-2xl ring-1 ring-black/5" : "p-8 sm:p-10 shadow-xl border border-gray-200"}`,
+    className: `bg-white rounded-2xl ${isHero ? "p-5 sm:p-6 shadow-2xl ring-1 ring-black/5" : "p-8 sm:p-10 shadow-xl border border-gray-200"}`,
     children: [!isHero && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
       className: "mb-7",
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
@@ -84,66 +89,72 @@ function ContactForm({
         children: "Share a few details and we'll get back to you within one business day."
       })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
-      className: "grid grid-cols-1 sm:grid-cols-2 gap-4",
+      className: `grid grid-cols-1 sm:grid-cols-2 ${isHero ? "gap-3" : "gap-4"}`,
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Field, {
         label: "Name",
         required: true,
+        compact: isHero,
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
           type: "text",
           name: "name",
           required: true,
-          className: inputClass,
+          className: inputCls,
           placeholder: "Your full name"
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Field, {
         label: "Business Name",
         required: true,
+        compact: isHero,
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
           type: "text",
           name: "business_name",
           required: true,
-          className: inputClass,
+          className: inputCls,
           placeholder: "Company name"
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Field, {
         label: "Phone Number",
         required: true,
+        compact: isHero,
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
           type: "tel",
           name: "phone",
           required: true,
-          className: inputClass,
+          className: inputCls,
           placeholder: "(555) 123-4567"
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Field, {
         label: "Email",
         required: true,
+        compact: isHero,
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
           type: "email",
           name: "email",
           required: true,
-          className: inputClass,
+          className: inputCls,
           placeholder: "you@business.com"
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Field, {
         label: "Website",
         full: true,
+        compact: isHero,
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
           type: "url",
           name: "website",
-          className: inputClass,
+          className: inputCls,
           placeholder: "https://yourbusiness.com"
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Field, {
         label: "Service Required",
         required: true,
+        compact: isHero,
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
           className: "relative",
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
             name: "service",
             required: true,
             defaultValue: "",
-            className: selectClass,
+            className: selectCls,
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
               value: "",
               disabled: true,
@@ -157,13 +168,14 @@ function ContactForm({
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Field, {
         label: "Annual Revenue",
         required: true,
+        compact: isHero,
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
           className: "relative",
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
             name: "revenue",
             required: true,
             defaultValue: "",
-            className: selectClass,
+            className: selectCls,
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
               value: "",
               disabled: true,
@@ -177,23 +189,25 @@ function ContactForm({
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Field, {
         label: "City",
         required: true,
+        compact: isHero,
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
           type: "text",
           name: "city",
           required: true,
-          className: inputClass,
+          className: inputCls,
           placeholder: "Your city"
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Field, {
         label: "State",
         required: true,
+        compact: isHero,
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
           className: "relative",
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
             name: "state",
             required: true,
             defaultValue: "",
-            className: selectClass,
+            className: selectCls,
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
               value: "",
               disabled: true,
@@ -207,10 +221,11 @@ function ContactForm({
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Field, {
         label: "Message",
         full: true,
+        compact: isHero,
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("textarea", {
           name: "message",
-          rows: isHero ? 3 : 4,
-          className: inputClass + " resize-none",
+          rows: isHero ? 2 : 4,
+          className: inputCls + " resize-none",
           placeholder: "Tell us about your goals, challenges, or what you're looking to achieve."
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
@@ -237,11 +252,11 @@ function ContactForm({
           }), "."]
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
-        className: "sm:col-span-2 mt-2",
+        className: `sm:col-span-2 ${isHero ? "mt-1" : "mt-2"}`,
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("button", {
           type: "submit",
           disabled: !agreed,
-          className: "group w-full inline-flex items-center justify-center gap-2 bg-[#1A1C29] text-white px-6 py-3.5 rounded-full font-semibold text-sm hover:bg-[#093D62] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#1A1C29] disabled:hover:translate-y-0 disabled:hover:shadow-none",
+          className: `group w-full inline-flex items-center justify-center gap-2 bg-[#1A1C29] text-white ${isHero ? "px-5 py-3" : "px-6 py-3.5"} rounded-full font-semibold text-sm hover:bg-[#093D62] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#1A1C29] disabled:hover:translate-y-0 disabled:hover:shadow-none`,
           children: ["Submit Request", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("svg", {
             className: "w-4 h-4 transform transition-transform duration-200 group-hover:translate-x-1",
             viewBox: "0 0 24 24",
@@ -958,27 +973,27 @@ const ArrowRight = () => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MOD
 });
 const SERVICES = [{
   label: "Industry Report",
-  href: "#",
+  href: "/services/industry-report/",
   Icon: ServiceIcon01
 }, {
   label: "Brand Identity & Positioning",
-  href: "#",
+  href: "/services/brand-identity-and-positioning/",
   Icon: ServiceIcon02
 }, {
   label: "Website Development & SEO",
-  href: "#",
+  href: "/services/website-development-and-seo/",
   Icon: ServiceIcon03
 }, {
   label: "Social Media Management",
-  href: "#",
+  href: "/services/social-media-management/",
   Icon: ServiceIcon04
 }, {
   label: "Paid Advertisement",
-  href: "#",
+  href: "/services/paid-advertisement/",
   Icon: ServiceIcon05
 }, {
   label: "Pitch Deck & Capabilities Development",
-  href: "#",
+  href: "/services/pitch-deck-and-capabilities-development/",
   Icon: ServiceIcon06
 }];
 
@@ -1012,6 +1027,7 @@ function Navbar({
   const [mobileMenuOpen, setMobileMenuOpen] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [scrolled, setScrolled] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const servicesRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const megamenuRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
 
   // Sticky shadow effect on scroll
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
@@ -1025,7 +1041,7 @@ function Navbar({
   // Close dropdown on outside click
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     const onClick = e => {
-      if (servicesRef.current && !servicesRef.current.contains(e.target)) {
+      if (servicesRef.current && !servicesRef.current.contains(e.target) && megamenuRef.current && !megamenuRef.current.contains(e.target)) {
         setServicesOpen(false);
       }
     };
@@ -1077,14 +1093,14 @@ function Navbar({
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
-          className: "flex items-center justify-between h-20 lg:h-24",
+          className: "flex items-center justify-between h-16 lg:h-20",
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("a", {
             href: homeUrl,
             className: "flex items-center shrink-0 group",
             children: logoUrl ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("img", {
               src: logoUrl,
               alt: "828 Marketing Solutions",
-              className: "h-14 lg:h-16 w-auto transition-transform duration-300 group-hover:scale-105"
+              className: "h-12 lg:h-14 w-auto transition-transform duration-300 group-hover:scale-105"
             }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
               className: "flex items-center gap-2",
               children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
@@ -1217,6 +1233,7 @@ function Navbar({
           })
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+        ref: megamenuRef,
         className: `hidden lg:block absolute left-0 right-0 top-full transition-all duration-200 origin-top ${servicesOpen ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto" : "opacity-0 scale-y-95 -translate-y-1 pointer-events-none"}`,
         role: "menu",
         "aria-hidden": !servicesOpen,
