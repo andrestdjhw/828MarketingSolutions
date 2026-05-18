@@ -46,13 +46,27 @@ const SOCIALS = [
   { label: "YouTube",   href: "https://www.youtube.com/@828marketingsolutions",   Icon: YouTubeIcon },
 ]
 
-function Footer({ logoUrl }) {
+function Footer({ logoUrl, bgUrl }) {
   const year = new Date().getFullYear()
 
   return (
     <footer className="bg-[var(--color-midnight-logic)] text-white relative overflow-hidden">
-      {/* Subtle circuit overlay — brand DNA, very low opacity */}
-      <div className="circuit-overlay" aria-hidden="true"></div>
+      {bgUrl ? (
+        <>
+          {/* Background estampado image */}
+          <img
+            src={bgUrl}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+          />
+          {/* Dark tint so text stays legible over any estampado */}
+          <div className="absolute inset-0 bg-[var(--color-midnight-logic)]/75"></div>
+        </>
+      ) : (
+        /* Fallback: CSS circuit pattern when no image is set */
+        <div className="circuit-overlay" aria-hidden="true"></div>
+      )}
 
       <div className="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-16 lg:py-20">
 

@@ -28,7 +28,8 @@ const footerEl = document.querySelector("#render-footer-here")
 if (footerEl) {
   const root = ReactDOM.createRoot(footerEl)
   const logoUrl = footerEl.dataset.logoUrl || ""
-  root.render(<Footer logoUrl={logoUrl} />)
+  const bgUrl   = footerEl.dataset.bgUrl   || ""
+  root.render(<Footer logoUrl={logoUrl} bgUrl={bgUrl} />)
 }
 
 // ─── ContactForm mounts (any number per page) ───────────────────────────────

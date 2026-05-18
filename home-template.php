@@ -18,6 +18,12 @@ get_header();
 // ───────────────────────────────────────────────────────────────────────────
 $hero_bg_url = '/wp-content/uploads/2026/05/828Estampado2-scaled.png';
 
+// ───────────────────────────────────────────────────────────────────────────
+// AUTHORITY ANCHORS BACKGROUND IMAGE — paste a WP Media Library URL here.
+// Leave as '' to use the default CSS circuit-pattern fallback.
+// ───────────────────────────────────────────────────────────────────────────
+$authority_bg_url = '/wp-content/uploads/2026/05/828Estampado2-scaled.png';
+
 $case_studies = eight28_get_case_studies();
 $industries   = eight28_get_industries();
 ?>
@@ -54,7 +60,7 @@ $industries   = eight28_get_industries();
               </p>
               <p class="text-sm lg:text-base font-medium text-white leading-relaxed">That's what we fix.</p>
               <p class="text-sm lg:text-base text-white/85 leading-relaxed">
-                828 builds the growth system that makes the market finally see and choose what you've already built.
+                828 builds the growth system that makes the market finally see — and choose — what you've already built.
               </p>
             </div>
           </div>
@@ -112,7 +118,7 @@ $industries   = eight28_get_industries();
       </p>
       <div class="my-10 mx-auto w-16 h-px bg-[var(--color-growth-signal)]"></div>
       <p class="font-display text-lg lg:text-xl text-white/85 leading-relaxed max-w-2xl mx-auto">
-        We don't make your business worth choosing we make sure the market sees it's already worth choosing.
+        We don't make your business worth choosing — we make sure the market sees it's already worth choosing.
       </p>
     </div>
   </section>
@@ -195,7 +201,15 @@ $industries   = eight28_get_industries();
 
   <!-- ═══════════════════════════════════════════════════════════════════════ 6.6  AUTHORITY ANCHORS ═══ -->
   <section class="relative bg-[var(--color-midnight-logic)] text-white overflow-hidden">
-    <div class="circuit-overlay" aria-hidden="true"></div>
+
+    <?php if (!empty($authority_bg_url)): ?>
+      <img src="<?php echo esc_url($authority_bg_url); ?>" alt="" class="absolute inset-0 w-full h-full object-cover object-center" aria-hidden="true" />
+      <div class="absolute inset-0 bg-[var(--color-midnight-logic)]/75"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-[var(--color-midnight-logic)]/50 via-[var(--color-midnight-logic)]/60 to-[var(--color-midnight-logic)]/80"></div>
+    <?php else: ?>
+      <div class="circuit-overlay" aria-hidden="true"></div>
+    <?php endif; ?>
+
     <div class="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-20 lg:py-24">
       <div class="text-center mb-12 max-w-3xl mx-auto">
         <p class="eyebrow eyebrow-lime mb-3">Authority</p>
@@ -227,10 +241,10 @@ $industries   = eight28_get_industries();
 
 
   <!-- ═══════════════════════════════════════════════════════════════════════ 6.7  FINAL CTA ═══ -->
-  <section class="bg-[var(--color-midnight-logic)] text-white">
+  <section class="bg-[var(--color-paper-soft)] text-[var(--color-midnight-logic)]">
     <div class="max-w-4xl mx-auto px-5 sm:px-8 lg:px-12 py-20 lg:py-24 text-center">
-      <h2 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-[1.15] mb-6">Ready to find out what the market is actually seeing about your business?</h2>
-      <p class="text-base lg:text-lg text-white/80 leading-relaxed max-w-2xl mx-auto mb-10">We'll show you what the market is actually seeing about your business right now — and what to do about it. No pitch. No fluff. Just the diagnosis.</p>
+      <h2 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl text-[var(--color-midnight-logic)] tracking-tight leading-[1.15] mb-6">Ready to find out what the market is actually seeing about your business?</h2>
+      <p class="text-base lg:text-lg text-[var(--color-midnight-logic)]/80 leading-relaxed max-w-2xl mx-auto mb-10">We'll show you what the market is actually seeing about your business right now and what to do about it. No pitch. No fluff. Just the diagnosis.</p>
       <a href="/contact" class="group inline-flex items-center gap-2 bg-[var(--color-growth-signal)] text-[var(--color-midnight-logic)] px-7 py-4 rounded-sm font-body font-medium text-[13px] uppercase tracking-[0.05em] hover:brightness-95 transition-all duration-200">
         Book a Strategy Call
         <svg class="w-4 h-4 transform transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>

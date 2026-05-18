@@ -500,12 +500,25 @@ const SOCIALS = [{
   Icon: YouTubeIcon
 }];
 function Footer({
-  logoUrl
+  logoUrl,
+  bgUrl
 }) {
   const year = new Date().getFullYear();
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("footer", {
     className: "bg-[var(--color-midnight-logic)] text-white relative overflow-hidden",
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+    children: [bgUrl ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("img", {
+        src: bgUrl,
+        alt: "",
+        "aria-hidden": "true",
+        className: "absolute inset-0 w-full h-full object-cover object-center"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+        className: "absolute inset-0 bg-[var(--color-midnight-logic)]/75"
+      })]
+    }) :
+    /*#__PURE__*/
+    /* Fallback: CSS circuit pattern when no image is set */
+    (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
       className: "circuit-overlay",
       "aria-hidden": "true"
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
@@ -990,8 +1003,10 @@ const footerEl = document.querySelector("#render-footer-here");
 if (footerEl) {
   const root = react_dom_client__WEBPACK_IMPORTED_MODULE_4___default().createRoot(footerEl);
   const logoUrl = footerEl.dataset.logoUrl || "";
+  const bgUrl = footerEl.dataset.bgUrl || "";
   root.render(/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_scripts_Footer__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    logoUrl: logoUrl
+    logoUrl: logoUrl,
+    bgUrl: bgUrl
   }));
 }
 
