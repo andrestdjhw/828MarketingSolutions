@@ -12,6 +12,12 @@
 get_header();
 
 // ───────────────────────────────────────────────────────────────────────────
+// HERO BACKGROUND IMAGE — paste a WP Media Library URL here.
+// Leave as '' to use solid Midnight Logic + circuit-pattern fallback.
+// ───────────────────────────────────────────────────────────────────────────
+$hero_bg_url = '/wp-content/uploads/2026/05/HomePageHero-scaled.png';
+
+// ───────────────────────────────────────────────────────────────────────────
 // TidyCal — Manuel will provide the actual booking page URL.
 // Existing 828 calendar should be embedded here.
 // Update when Manuel provides the URL or embed code.
@@ -25,7 +31,14 @@ $tidycal_url = 'https://tidycal.com/828marketingsolutions'; // PLACEHOLDER
        HERO
        ═══════════════════════════════════════════════════════════════════════ -->
   <section class="relative bg-[var(--color-midnight-logic)] text-white overflow-hidden">
-    <div class="circuit-overlay" aria-hidden="true"></div>
+
+    <?php if (!empty($hero_bg_url)): ?>
+      <img src="<?php echo esc_url($hero_bg_url); ?>" alt="" class="absolute inset-0 w-full h-full object-cover object-center" aria-hidden="true" />
+      <div class="absolute inset-0 bg-[var(--color-midnight-logic)]/15"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-[var(--color-midnight-logic)]/40 via-[var(--color-midnight-logic)]/55 to-[var(--color-midnight-logic)]/75"></div>
+    <?php else: ?>
+      <div class="circuit-overlay" aria-hidden="true"></div>
+    <?php endif; ?>
 
     <div class="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-20 lg:py-24 text-center">
       <p class="eyebrow eyebrow-lime mb-5">Contact</p>

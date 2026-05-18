@@ -94,10 +94,11 @@ body {
   background-color: var(--color-paper);
 }
 
-/* All headings use Helvetica (the display sans) per brand book */
+/* All headings use Helvetica (the display sans) per brand book.
+   No color forced here — let Tailwind utilities (text-white, text-midnight, etc.)
+   decide. Browser default (currentColor → inherits from parent) handles the rest. */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
-  color: var(--color-midnight-logic);
   font-weight: 700;        /* Helvetica Bold for impact */
   letter-spacing: -0.015em;
   line-height: 1.1;
