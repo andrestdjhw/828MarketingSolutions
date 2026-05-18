@@ -1,5 +1,5 @@
 <?php
-  // Logo URL — uploaded to WP Media Library
+  // Logo for the dark footer — use the white/light version
   $footer_logo_url = '/wp-content/uploads/2026/05/828_Logotipo_blanco-scaled.png';
 ?>
 

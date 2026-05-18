@@ -1,59 +1,185 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* ─── 828 Marketing Solutions — Brand System ─────────────────────────────
-   Source: 828 Marketing Solutions Branding (Noventa10 Casa de diseño)
-   ───────────────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   828 MARKETING SOLUTIONS — Website Rebuild v2-Final
+   Source of truth: Manuel Luna's brief (May 17, 2026 · v2-Final)
+   Brand system: Noventa10 official
+   ═══════════════════════════════════════════════════════════════════════════
+   THE EMOTION (the single segmentation): "I built something real, and the
+   market isn't seeing it. I'm tired of guessing why."
+
+   THE POV: "Most agencies sell marketing tactics. We sell visibility for
+   businesses that already deserve it."
+
+   COLOR DISCIPLINE:
+   - Growth Signal (lime) is the SPARK. Never the field. CTAs, accent rules,
+     single key words only. Never a section background.
+   - Midnight Logic dominates hero + footer. White or paper for body sections.
+   - Never combine Growth Signal lime and Strategic Blue side-by-side in the
+     same component — they fight.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Self-hosted fonts ─────────────────────────────────────────────────────
+   Files live at: /wp-content/themes/828_marketing_solutions/fonts/
+   Path is relative to this CSS file's compiled location (/build/index.css)
+   so we walk one level up: ../fonts/
+   ─────────────────────────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: "Helvetica";
+  src: url("../fonts/Helvetica-Regular.woff2") format("woff2"),
+       url("../fonts/Helvetica-Regular.ttf")   format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Helvetica";
+  src: url("../fonts/Helvetica-Bold.woff2") format("woff2"),
+       url("../fonts/Helvetica-Bold.ttf")   format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nebulica";
+  src: url("../fonts/Nebulica-Regular.woff2") format("woff2"),
+       url("../fonts/Nebulica-Regular.ttf")   format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nebulica";
+  src: url("../fonts/Nebulica-Medium.woff2") format("woff2"),
+       url("../fonts/Nebulica-Medium.ttf")   format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 
 @theme {
-  /* Brand color palette (named per branding deck) */
-  --color-midnight-logic: #1A1C29;   /* primary dark — backgrounds, headings */
-  --color-deep-insight: #093D62;     /* primary accent blue */
-  --color-strategic-blue: #456D87;   /* secondary blue — hovers, mid tones */
-  --color-metric-steel: #6D7A8A;     /* neutral steel — secondary text, borders */
-  --color-growth-signal: #A3CB37;    /* lime green accent — micro-elements, hovers */
+  /* ── Color palette (Noventa10 brand book — Section 3.1) ─────────────── */
+  --color-midnight-logic: #1A1C29;   /* Primary dark. Hero, large headlines, footer */
+  --color-metric-steel:   #6D7A8A;   /* Body text, secondary UI, dividers */
+  --color-growth-signal:  #A3CB37;   /* Lime spark. CTAs, accent strokes — never large areas */
+  --color-deep-insight:   #093D62;   /* Secondary navy. Section headers, manifesto blocks */
+  --color-strategic-blue: #456D87;   /* Slate accent. Subheads, secondary callouts */
 
-  /* Font families */
-  --font-heading: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  --font-body: "Manrope", "Helvetica Neue", "Arial", sans-serif;
+  /* Paper / neutrals used as body section backgrounds */
+  --color-paper:          #FFFFFF;
+  --color-paper-soft:     #F7F8FA;   /* very-light-gray for case-card alternation */
+
+  /* ── Typography (Section 3.2) ────────────────────────────────────────── */
+  --font-display: "Helvetica", "Helvetica Neue", Arial, sans-serif;
+  --font-body:    "Nebulica", "Nebulica Web", "Inter", system-ui, sans-serif;
 }
 
-/* Apply brand fonts globally */
+/* ─── Global base ─────────────────────────────────────────────────────── */
 html {
   font-family: var(--font-body);
+  color: var(--color-midnight-logic);
+  background-color: var(--color-paper);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
+body {
+  background-color: var(--color-paper);
+}
+
+/* All headings use Helvetica (the display sans) per brand book */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  letter-spacing: -0.01em;
-}
-
-/* ─── Brand gradient hover effect ────────────────────────────────────────
-   Default: solid Midnight Logic color.
-   Hover (via .group on the parent element): a deep-insight → growth-signal
-   gradient sweeps the text from left to right.
-   Used in: navbar megamenu items, home Our Process titles, home Why Us titles.
-   ─────────────────────────────────────────────────────────────────────── */
-.brand-gradient-text {
+  font-family: var(--font-display);
   color: var(--color-midnight-logic);
-  background-image: linear-gradient(
-    to right,
-    var(--color-deep-insight) 0%,
-    var(--color-deep-insight) 50%,
-    var(--color-growth-signal) 100%
-  );
-  background-size: 200% 100%;
-  background-position: 0% 0%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: currentColor;
-  transition: background-position 500ms ease-out, color 150ms ease-out;
+  font-weight: 700;        /* Helvetica Bold for impact */
+  letter-spacing: -0.015em;
+  line-height: 1.1;
 }
 
-.group:hover .brand-gradient-text {
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  background-position: 100% 0%;
+.font-display { font-family: var(--font-display); }
+.font-body    { font-family: var(--font-body); }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Brand visual system — Estampados (Section 3.4)
+   Circuit-line patterns and data-grid textures used at LOW opacity (8-15%)
+   as evidence of the data-driven aesthetic. Never decoration for its own sake.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Subtle circuit-board pattern overlay — for Midnight Logic backgrounds.
+   Apply with: <div class="circuit-overlay"></div> on a positioned parent. */
+.circuit-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.10;
+  background-image:
+    linear-gradient(transparent 95%, var(--color-growth-signal) 95%),
+    linear-gradient(90deg, transparent 95%, var(--color-growth-signal) 95%);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+}
+
+/* Subtle data-node circuit (SVG-based, more illustrative) — used in hero areas.
+   Render via inline SVG; this class is the wrapper positioning. */
+.estampado-wrapper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Editorial helpers
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Growth Signal section divider rule (3-6px per brief 3.4) */
+.gs-divider {
+  background-color: var(--color-growth-signal);
+  height: 4px;
+  width: 100%;
+}
+
+/* Vertical Growth Signal divider — used between Promise Bar columns */
+.gs-divider-v {
+  background-color: var(--color-growth-signal);
+  width: 1px;
+  align-self: stretch;
+  opacity: 0.6;
+}
+
+/* Eyebrow label (Nebulica Medium, ALL CAPS, letter-spaced) */
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.eyebrow-tan,
+.eyebrow-blue {
+  color: var(--color-strategic-blue);
+}
+
+.eyebrow-lime {
+  color: var(--color-growth-signal);
+}
+
+/* Button base — ALL CAPS, letter-spacing per brand book (Section 3.2) */
+.btn-cta {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }

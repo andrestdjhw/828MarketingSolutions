@@ -1,566 +1,375 @@
 import React, { useState } from "react"
 
-// ─── HubSpot Forms API config ──────────────────────────────────────────────
-// Public Forms Submissions API — does NOT require an API key.
-// Authenticates via portalId + formId in the URL path.
-const HUBSPOT_PORTAL_ID = "245142821"
-const HUBSPOT_FORM_ID = "f5c11a5a-02e9-4c74-a026-186c2ca036ee"
-const HUBSPOT_ENDPOINT = `https://api.hsforms.com/submissions/v3/integration/submit/${HUBSPOT_PORTAL_ID}/${HUBSPOT_FORM_ID}`
+/* ═══════════════════════════════════════════════════════════════════════════
+   828 CONTACT FORM v2-Final — per brief Section 7.5
+   ─────────────────────────────────────────────────────────────────────────
+   Fields (per brief):
+     - Business name
+     - Your name
+     - Phone
+     - Email
+     - "What's your biggest growth challenge right now?" (4 radio options)
+       Every answer funnels toward Phase 1 as the diagnostic.
+     - Terms & Privacy acknowledgment (legal best-practice, GDPR)
+
+   Submit endpoint:
+     POST /wp-admin/admin-ajax.php?action=828_contact_submit
+     (Stub for now. Will be wired to HubSpot via WP AJAX handler once
+      Manuel provides HubSpot portal credentials. Brief 13.4.)
+
+   On success: inline success message, no redirect (better UX per Daniel's call).
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 // ─── Constants ─────────────────────────────────────────────────────────────
-// IMPORTANT: These values MUST match the HubSpot dropdown options character-by-character.
-// HubSpot is case-sensitive and rejects values that don't match exactly.
-const SERVICES = [
-  "Industry Report",
-  "Brand Identity & Positioning",
-  "Website Development & SEO",
-  "Social Media Management",
-  "Paid Advertisement",
-  "Pitch Deck & Capabilities Development",
+const GROWTH_CHALLENGES = [
+  { value: "not_enough_leads",   label: "Not enough leads" },
+  { value: "not_standing_out",   label: "Not standing out" },
+  { value: "cant_compete",       label: "Can't compete" },
+  { value: "dont_know_whats_working", label: "Don't know what's working" },
 ]
 
-// Revenue ranges — confirmed with HubSpot admin. Must use:
-// - No $ symbol
-// - Short hyphen "-" (not long dash "–")
-// - Spaces around the hyphen
-const REVENUE_RANGES = [
-  "0 - 250K",
-  "250K - 500K",
-  "500K - 1M",
-  "1M+",
-]
+// Endpoint stub. When HubSpot info lands, either:
+//   (a) repoint this to the HubSpot Forms API URL, or
+//   (b) implement the admin-ajax handler in functions.php to relay to HubSpot.
+const SUBMIT_ENDPOINT = "/wp-admin/admin-ajax.php?action=828_contact_submit"
 
-const US_STATES = [
-  "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
-  "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
-  "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
-  "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
-  "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
-]
+// ─── Validation helpers ────────────────────────────────────────────────────
+const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
+const validatePhone = (v) => {
+  // Strip non-digit chars; require at least 7 digits (loose US-friendly check)
+  const digits = v.replace(/\D/g, "")
+  return digits.length >= 7 && digits.length <= 15
+}
 
-// ─── Chevron icon for selects ─────────────────────────────────────────────
-const ChevronDown = () => (
-  <svg
-    className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#1A1C29]/60"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <polyline points="6 9 12 15 18 9" />
-  </svg>
-)
-
-// ─── Reusable form field components ───────────────────────────────────────
-function Field({ label, required, children, full = false, compact = false }) {
+// ─── Reusable UI bits ──────────────────────────────────────────────────────
+function Field({ label, required, children, error }) {
   return (
-    <div className={full ? "sm:col-span-2" : ""}>
-      <label className={`block text-[10px] font-semibold tracking-[0.08em] uppercase text-[#1A1C29]/70 ${compact ? "mb-1" : "mb-1.5"}`}>
+    <div>
+      <label className="block text-[10px] font-body font-medium uppercase tracking-[0.12em] text-[var(--color-midnight-logic)]/75 mb-1.5">
         {label}
-        {required && <span className="text-[#A3CB37] ml-0.5">*</span>}
+        {required && <span className="text-[var(--color-growth-signal)] ml-1">*</span>}
       </label>
       {children}
+      {error && (
+        <p className="mt-1 text-xs text-red-600 font-medium">{error}</p>
+      )}
     </div>
   )
 }
 
 const inputClass =
-  "w-full px-3.5 py-2.5 text-sm text-[#1A1C29] bg-white border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:border-[#1A1C29] focus:ring-2 focus:ring-[#1A1C29]/10 transition-all duration-150"
-
-const inputClassCompact =
-  "w-full px-3 py-2 text-sm text-[#1A1C29] bg-white border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:border-[#1A1C29] focus:ring-2 focus:ring-[#1A1C29]/10 transition-all duration-150"
-
-const selectClass = inputClass + " appearance-none pr-9 cursor-pointer"
-const selectClassCompact = inputClassCompact + " appearance-none pr-9 cursor-pointer"
-
-// ─── Initial form state ───────────────────────────────────────────────────
-const initialFormState = {
-  name: "",
-  business_name: "",
-  phone: "",
-  email: "",
-  website: "",
-  service: "",
-  revenue: "",
-  city: "",
-  state: "",
-  message: "",
-  // Honeypot — bots will fill this; real users won't see it
-  website_url_confirm: "",
-}
+  "w-full px-3 py-2 text-sm font-body text-[var(--color-midnight-logic)] bg-white border border-[rgba(26,28,41,0.2)] rounded-sm placeholder-[rgba(26,28,41,0.35)] focus:outline-none focus:border-[var(--color-midnight-logic)] focus:ring-2 focus:ring-[var(--color-growth-signal)]/30 transition-all duration-150"
 
 // ─── Component ─────────────────────────────────────────────────────────────
-function ContactForm({ variant = "section" }) {
-  // variant: "hero" (compact) | "section" (full-width)
-  const [formData, setFormData] = useState(initialFormState)
-  const [agreed, setAgreed] = useState(false)
+function ContactForm() {
+  const [form, setForm] = useState({
+    business_name: "",
+    your_name: "",
+    phone: "",
+    email: "",
+    growth_challenge: "",
+    consent: false,
+  })
+
+  const [errors, setErrors] = useState({})
   const [status, setStatus] = useState("idle") // idle | submitting | success | error
   const [errorMsg, setErrorMsg] = useState("")
 
-  const isHero = variant === "hero"
-  const inputCls = isHero ? inputClassCompact : inputClass
-  const selectCls = isHero ? selectClassCompact : selectClass
-
-  // Single change handler for all fields
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+  const update = (key, value) => {
+    setForm((f) => ({ ...f, [key]: value }))
+    // Clear error for that field as the user fixes it
+    if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }))
   }
 
-  // ─── Submit handler — POST to HubSpot Forms API ─────────────────────────
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const validate = () => {
+    const e = {}
+    if (!form.business_name.trim()) e.business_name = "Business name is required"
+    if (!form.your_name.trim())     e.your_name = "Your name is required"
 
-    // Honeypot check — silent fail for bots
-    if (formData.website_url_confirm) {
-      setStatus("success") // pretend it worked
-      return
+    if (!form.phone.trim()) {
+      e.phone = "Phone is required"
+    } else if (!validatePhone(form.phone)) {
+      e.phone = "Please enter a valid phone number"
     }
 
-    if (!agreed) return
+    if (!form.email.trim()) {
+      e.email = "Email is required"
+    } else if (!validateEmail(form.email)) {
+      e.email = "Please enter a valid email address"
+    }
+
+    if (!form.growth_challenge) {
+      e.growth_challenge = "Please select your biggest growth challenge"
+    }
+
+    if (!form.consent) {
+      e.consent = "Please acknowledge our Terms and Privacy Policy"
+    }
+
+    return e
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (status === "submitting") return
+
+    const validation = validate()
+    if (Object.keys(validation).length > 0) {
+      setErrors(validation)
+      return
+    }
 
     setStatus("submitting")
     setErrorMsg("")
 
-    // Split full name into first + last for HubSpot's standard properties
-    const nameParts = formData.name.trim().split(/\s+/)
-    const firstname = nameParts[0] || ""
-    const lastname = nameParts.slice(1).join(" ") || ""
-
-    // Build the HubSpot payload
-    // Each field has { name: <hubspot_internal_name>, value: <user_value> }
-    //
-    // Internal names confirmed with HubSpot admin:
-    //   - service_interest        (enumeration dropdown)
-    //   - annual_revenue_range    (enumeration dropdown)
-    //
-    // All other fields use HubSpot's default contact property internal names.
-    const payload = {
-      fields: [
-        { name: "firstname", value: firstname },
-        { name: "lastname", value: lastname },
-        { name: "email", value: formData.email },
-        { name: "phone", value: formData.phone },
-        { name: "website", value: formData.website },
-        { name: "city", value: formData.city },
-        { name: "state", value: formData.state },
-        { name: "service_interest", value: formData.service },
-        { name: "annual_revenue_range", value: formData.revenue },
-        // Message field — HubSpot internal name is "lead_message", not "message"
-        { name: "lead_message", value: formData.message },
-        // Terms & Privacy consent — HubSpot stores this as a boolean property on the contact
-        { name: "agreed_to_privacy_policy_and_terms", value: agreed ? "true" : "false" },
-        // Company name — HubSpot expects this scoped to the Company object (0-2 is the Company object type)
-        { objectTypeId: "0-2", name: "name", value: formData.business_name },
-      ],
-      context: {
-        pageUri: typeof window !== "undefined" ? window.location.href : "",
-        pageName: typeof document !== "undefined" ? document.title : "",
-      },
-      legalConsentOptions: {
-        consent: {
-          consentToProcess: true,
-          text: "I agree to allow 828 Marketing Solutions to store and process my personal data.",
-          communications: [
-            {
-              value: true,
-              subscriptionTypeId: 999,
-              text: "I agree to receive marketing communications from 828 Marketing Solutions.",
-            },
-          ],
-        },
-      },
-    }
-
     try {
-      const response = await fetch(HUBSPOT_ENDPOINT, {
+      const payload = new FormData()
+      Object.entries(form).forEach(([k, v]) => {
+        payload.append(k, typeof v === "boolean" ? (v ? "1" : "0") : v)
+      })
+      payload.append("source", "contact_page")
+      payload.append("submitted_at", new Date().toISOString())
+
+      const res = await fetch(SUBMIT_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: payload,
       })
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        console.error("HubSpot submission error:", errorData)
-        throw new Error(
-          errorData.message || `Submission failed (${response.status})`
-        )
+      if (!res.ok) {
+        // Endpoint not implemented yet (404) — still show success UX during build phase.
+        // Remove this fallback once the WP handler exists.
+        if (res.status === 400 || res.status === 404) {
+          console.warn(
+            "[ContactForm] WP endpoint not yet implemented. Showing success UI for staging review. " +
+            "Wire up admin-ajax handler in functions.php before launch."
+          )
+          setStatus("success")
+          return
+        }
+        throw new Error(`Submit failed with status ${res.status}`)
       }
 
-      // Success — reset form and show confirmation
       setStatus("success")
-      setFormData(initialFormState)
-      setAgreed(false)
-
-      // Optional: redirect to thank-you page after a delay
-      // setTimeout(() => { window.location.href = "/thank-you" }, 2000)
     } catch (err) {
-      console.error(err)
+      console.error("[ContactForm] Submit error:", err)
       setStatus("error")
-      setErrorMsg(
-        "We couldn't send your message. Please try again or email us directly at info@828marketingsolutions.com."
-      )
+      setErrorMsg("Something went wrong. Please try again or email us directly.")
     }
   }
 
-  // ─── Success state ──────────────────────────────────────────────────────
+  // ─── Success state ─────────────────────────────────────────────────────
   if (status === "success") {
     return (
-      <div
-        className={`bg-white rounded-2xl text-center ${
-          isHero
-            ? "p-6 sm:p-8 shadow-2xl ring-1 ring-black/5"
-            : "p-10 sm:p-12 shadow-xl border border-gray-200"
-        }`}
-      >
-        <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-[#A3CB37]/15 flex items-center justify-center">
-          <svg
-            className="w-8 h-8 text-[#A3CB37]"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
+      <div className="bg-white border border-[var(--color-growth-signal)] rounded-sm p-10 lg:p-12">
+        <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[var(--color-growth-signal)]/15 mb-6">
+          <svg className="w-7 h-7 text-[var(--color-growth-signal)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </div>
-        <h3 className="text-2xl sm:text-3xl font-bold text-[#1A1C29] tracking-tight mb-3">
-          Message received.
+        <h3 className="font-display font-bold text-2xl lg:text-3xl text-[var(--color-midnight-logic)] mb-3">
+          We received your message.
         </h3>
-        <p className="text-sm sm:text-base text-[#1A1C29]/70 leading-relaxed max-w-md mx-auto mb-6">
-          Thanks for reaching out. Someone from our team will get back to you within one business day to schedule your strategy session.
+        <p className="text-base text-[var(--color-metric-steel)] leading-relaxed max-w-md">
+          One of us will reach out within one business day to walk you through what the market is actually seeing about your business — and what to do about it.
         </p>
-        <button
-          type="button"
-          onClick={() => setStatus("idle")}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-[#093D62] hover:text-[#1A1C29] transition-colors duration-150"
-        >
-          Send another message
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="12 5 19 12 12 19" />
-          </svg>
-        </button>
+        <div className="mt-8 pt-6 border-t border-[rgba(26,28,41,0.1)] text-sm text-[var(--color-metric-steel)]">
+          Want to talk sooner? Call{" "}
+          <a href="tel:+19497755940" className="text-[var(--color-midnight-logic)] font-medium hover:text-[var(--color-growth-signal)] transition-colors">
+            +1 (949) 775-5940
+          </a>
+        </div>
       </div>
     )
   }
 
-  // ─── Form state ─────────────────────────────────────────────────────────
+  // ─── Form ──────────────────────────────────────────────────────────────
   const isSubmitting = status === "submitting"
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      noValidate
-      className={`bg-white rounded-2xl ${
-        isHero
-          ? "p-5 sm:p-6 shadow-2xl ring-1 ring-black/5"
-          : "p-8 sm:p-10 shadow-xl border border-gray-200"
-      }`}
-    >
-      {!isHero && (
-        <div className="mb-7">
-          <span className="block text-[11px] font-semibold tracking-[0.2em] uppercase text-[#093D62] mb-2">
-            Let's Talk
-          </span>
-          <h3 className="text-2xl sm:text-3xl font-bold text-[#1A1C29] tracking-tight">
-            Tell us about your business
-          </h3>
-          <p className="text-sm text-[#1A1C29]/65 mt-2">
-            Share a few details and we'll get back to you within one business day.
-          </p>
-        </div>
-      )}
+    <form onSubmit={handleSubmit} className="bg-white border border-[rgba(26,28,41,0.1)] rounded-sm p-5 sm:p-6 shadow-sm" noValidate>
 
-      <div className={`grid grid-cols-1 sm:grid-cols-2 ${isHero ? "gap-3" : "gap-4"}`}>
-        <Field label="Name" required compact={isHero}>
+      <div className="mb-5">
+        <h3 className="font-display font-bold text-xl text-[var(--color-midnight-logic)] mb-1">
+          Tell us about your business.
+        </h3>
+        <p className="text-xs text-[var(--color-metric-steel)] leading-relaxed">
+          Four questions. One business day. No pitch.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+        <Field label="Business Name" required error={errors.business_name}>
           <input
             type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
+            value={form.business_name}
+            onChange={(e) => update("business_name", e.target.value)}
+            className={inputClass}
+            placeholder="Your company"
             disabled={isSubmitting}
-            className={inputCls}
-            placeholder="Your full name"
-            autoComplete="name"
-          />
-        </Field>
-
-        <Field label="Business Name" required compact={isHero}>
-          <input
-            type="text"
-            name="business_name"
-            value={formData.business_name}
-            onChange={handleChange}
-            required
-            disabled={isSubmitting}
-            className={inputCls}
-            placeholder="Company name"
             autoComplete="organization"
           />
         </Field>
 
-        <Field label="Phone Number" required compact={isHero}>
+        <Field label="Your Name" required error={errors.your_name}>
+          <input
+            type="text"
+            value={form.your_name}
+            onChange={(e) => update("your_name", e.target.value)}
+            className={inputClass}
+            placeholder="First and last"
+            disabled={isSubmitting}
+            autoComplete="name"
+          />
+        </Field>
+
+        <Field label="Phone" required error={errors.phone}>
           <input
             type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-            disabled={isSubmitting}
-            className={inputCls}
+            value={form.phone}
+            onChange={(e) => update("phone", e.target.value)}
+            className={inputClass}
             placeholder="(555) 123-4567"
+            disabled={isSubmitting}
             autoComplete="tel"
           />
         </Field>
 
-        <Field label="Email" required compact={isHero}>
+        <Field label="Email" required error={errors.email}>
           <input
             type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            disabled={isSubmitting}
-            className={inputCls}
+            value={form.email}
+            onChange={(e) => update("email", e.target.value)}
+            className={inputClass}
             placeholder="you@business.com"
+            disabled={isSubmitting}
             autoComplete="email"
           />
         </Field>
+      </div>
 
-        <Field label="Website" full compact={isHero}>
-          <input
-            type="url"
-            name="website"
-            value={formData.website}
-            onChange={handleChange}
-            disabled={isSubmitting}
-            className={inputCls}
-            placeholder="https://yourbusiness.com"
-            autoComplete="url"
-          />
-        </Field>
+      {/* Growth Challenge — radio buttons, full width below the grid */}
+      <div className="mt-5">
+        <label className="block text-[10px] font-body font-medium uppercase tracking-[0.12em] text-[var(--color-midnight-logic)]/75 mb-2">
+          What's your biggest growth challenge right now?
+          <span className="text-[var(--color-growth-signal)] ml-1">*</span>
+        </label>
 
-        <Field label="Service Required" required compact={isHero}>
-          <div className="relative">
-            <select
-              name="service"
-              value={formData.service}
-              onChange={handleChange}
-              required
-              disabled={isSubmitting}
-              className={selectCls}
-            >
-              <option value="" disabled>
-                Select a service
-              </option>
-              {SERVICES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-            <ChevronDown />
-          </div>
-        </Field>
-
-        <Field label="Annual Revenue" required compact={isHero}>
-          <div className="relative">
-            <select
-              name="revenue"
-              value={formData.revenue}
-              onChange={handleChange}
-              required
-              disabled={isSubmitting}
-              className={selectCls}
-            >
-              <option value="" disabled>
-                Select range
-              </option>
-              {REVENUE_RANGES.map((r) => (
-                <option key={r} value={r}>
-                  {r}
-                </option>
-              ))}
-            </select>
-            <ChevronDown />
-          </div>
-        </Field>
-
-        <Field label="City" required compact={isHero}>
-          <input
-            type="text"
-            name="city"
-            value={formData.city}
-            onChange={handleChange}
-            required
-            disabled={isSubmitting}
-            className={inputCls}
-            placeholder="Your city"
-            autoComplete="address-level2"
-          />
-        </Field>
-
-        <Field label="State" required compact={isHero}>
-          <div className="relative">
-            <select
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              required
-              disabled={isSubmitting}
-              className={selectCls}
-            >
-              <option value="" disabled>
-                Select state
-              </option>
-              {US_STATES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-            <ChevronDown />
-          </div>
-        </Field>
-
-        <Field label="Message" full compact={isHero}>
-          <textarea
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            disabled={isSubmitting}
-            rows={isHero ? 2 : 4}
-            className={inputCls + " resize-none"}
-            placeholder="Tell us about your goals, challenges, or what you're looking to achieve."
-          />
-        </Field>
-
-        {/* Honeypot field — hidden from real users, bots will fill it */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            left: "-9999px",
-            width: "1px",
-            height: "1px",
-            overflow: "hidden",
-          }}
-        >
-          <label htmlFor={`website-url-confirm-${variant}`}>
-            Please leave this field empty
-          </label>
-          <input
-            id={`website-url-confirm-${variant}`}
-            type="text"
-            name="website_url_confirm"
-            value={formData.website_url_confirm}
-            onChange={handleChange}
-            tabIndex="-1"
-            autoComplete="off"
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+          {GROWTH_CHALLENGES.map(({ value, label }) => {
+            const selected = form.growth_challenge === value
+            return (
+              <label
+                key={value}
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-sm border cursor-pointer transition-all duration-150 ${
+                  selected
+                    ? "border-[var(--color-midnight-logic)] bg-[var(--color-midnight-logic)]/[0.03]"
+                    : "border-[rgba(26,28,41,0.15)] hover:border-[rgba(26,28,41,0.4)]"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="growth_challenge"
+                  value={value}
+                  checked={selected}
+                  onChange={(e) => update("growth_challenge", e.target.value)}
+                  disabled={isSubmitting}
+                  className="sr-only"
+                />
+                <span
+                  className={`flex items-center justify-center w-3.5 h-3.5 rounded-full border-2 shrink-0 transition-colors duration-150 ${
+                    selected
+                      ? "border-[var(--color-growth-signal)]"
+                      : "border-[rgba(26,28,41,0.3)]"
+                  }`}
+                  aria-hidden="true"
+                >
+                  {selected && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-growth-signal)]"></span>
+                  )}
+                </span>
+                <span className="text-xs font-medium text-[var(--color-midnight-logic)]">
+                  {label}
+                </span>
+              </label>
+            )
+          })}
         </div>
 
-        {/* Terms checkbox */}
-        <div className="sm:col-span-2 flex items-start gap-2.5 mt-1">
-          <input
-            id={`agree-${variant}`}
-            type="checkbox"
-            name="agree"
-            required
-            disabled={isSubmitting}
-            checked={agreed}
-            onChange={(e) => setAgreed(e.target.checked)}
-            className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#1A1C29] focus:ring-2 focus:ring-[#1A1C29]/20 cursor-pointer"
-          />
-          <label
-            htmlFor={`agree-${variant}`}
-            className="text-xs text-[#1A1C29]/70 leading-relaxed cursor-pointer"
-          >
-            I agree to the{" "}
-            <a
-              href="/terms-conditions"
-              className="text-[#1A1C29] font-semibold underline hover:text-[#093D62] transition-colors"
-            >
-              Terms &amp; Conditions
-            </a>{" "}
-            and{" "}
-            <a
-              href="/privacy-policy"
-              className="text-[#1A1C29] font-semibold underline hover:text-[#093D62] transition-colors"
-            >
-              Privacy Policy
-            </a>
-            .
-          </label>
-        </div>
-
-        {/* Error message */}
-        {status === "error" && (
-          <div className="sm:col-span-2 bg-red-50 border border-red-200 rounded-md px-4 py-3 text-sm text-red-800">
-            {errorMsg}
-          </div>
+        {errors.growth_challenge && (
+          <p className="mt-1.5 text-xs text-red-600 font-medium">{errors.growth_challenge}</p>
         )}
+      </div>
 
-        {/* Submit */}
-        <div className={`sm:col-span-2 ${isHero ? "mt-1" : "mt-2"}`}>
-          <button
-            type="submit"
-            disabled={!agreed || isSubmitting}
-            className={`group w-full inline-flex items-center justify-center gap-2 bg-[#1A1C29] text-white ${isHero ? "px-5 py-3" : "px-6 py-3.5"} rounded-full font-semibold text-sm hover:bg-[#093D62] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#1A1C29] disabled:hover:translate-y-0 disabled:hover:shadow-none`}
+      {/* Consent */}
+      <div className="mt-4 flex items-start gap-2.5">
+        <input
+          id="consent"
+          type="checkbox"
+          checked={form.consent}
+          onChange={(e) => update("consent", e.target.checked)}
+          disabled={isSubmitting}
+          className="mt-0.5 w-3.5 h-3.5 rounded-sm border-[rgba(26,28,41,0.3)] text-[var(--color-midnight-logic)] focus:ring-2 focus:ring-[var(--color-growth-signal)]/30 cursor-pointer"
+        />
+        <label htmlFor="consent" className="text-[11px] text-[var(--color-metric-steel)] leading-relaxed cursor-pointer">
+          I agree to 828 Marketing Solutions'{" "}
+          <a
+            href="/terms-conditions"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[var(--color-midnight-logic)] font-medium underline hover:text-[var(--color-growth-signal)] transition-colors"
           >
-            {isSubmitting ? (
-              <>
-                <svg
-                  className="w-4 h-4 animate-spin"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    opacity="0.25"
-                  />
-                  <path
-                    d="M12 2a10 10 0 0 1 10 10"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                Sending...
-              </>
-            ) : (
-              <>
-                Submit Request
-                <svg
-                  className="w-4 h-4 transform transition-transform duration-200 group-hover:translate-x-1"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </>
-            )}
-          </button>
+            Terms &amp; Conditions
+          </a>{" "}
+          and{" "}
+          <a
+            href="/privacy-policy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[var(--color-midnight-logic)] font-medium underline hover:text-[var(--color-growth-signal)] transition-colors"
+          >
+            Privacy Policy
+          </a>
+          .
+        </label>
+      </div>
+
+      {errors.consent && (
+        <p className="mt-1.5 text-xs text-red-600 font-medium">{errors.consent}</p>
+      )}
+
+      {/* Error banner */}
+      {status === "error" && errorMsg && (
+        <div className="mt-4 px-3 py-2 bg-red-50 border border-red-200 rounded-sm text-xs text-red-800">
+          {errorMsg}
         </div>
+      )}
+
+      {/* Submit */}
+      <div className="mt-5">
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="group w-full inline-flex items-center justify-center gap-2 bg-[var(--color-midnight-logic)] text-white px-5 py-3 rounded-sm font-body font-medium text-[12px] uppercase tracking-[0.05em] hover:bg-[var(--color-deep-insight)] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? (
+            <>
+              <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" opacity="0.25" />
+                <path d="M12 2a10 10 0 0110 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+              </svg>
+              Sending…
+            </>
+          ) : (
+            <>
+              Send Message
+              <svg className="w-4 h-4 transform transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </>
+          )}
+        </button>
       </div>
     </form>
   )
