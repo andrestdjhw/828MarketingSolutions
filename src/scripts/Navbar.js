@@ -407,7 +407,7 @@ function Navbar({ logoUrl, homeUrl = "/" }) {
                     <span className="shrink-0 flex items-center justify-center w-8 h-8 rounded-md bg-[#F8F9FB] text-[#093D62] group-hover:bg-white transition-colors duration-150">
                       <Icon />
                     </span>
-                    <span className="text-sm font-semibold text-[#1A1C29] group-hover:text-[#093D62] transition-colors duration-150 leading-snug">
+                    <span className="brand-gradient-text text-sm font-semibold leading-snug">
                       {label}
                     </span>
                   </a>

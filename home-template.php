@@ -201,7 +201,7 @@ echo '<!-- DEBUG: home-template.php IS loading. hero_bg_url length = ' . strlen(
               <line x1="8" y1="11" x2="14" y2="11" />
             </svg>
           </div>
-          <h3 class="text-lg font-bold text-[#1A1C29] mb-2 leading-snug">Strategic Market Analysis</h3>
+          <h3 class="text-lg font-bold mb-2 leading-snug brand-gradient-text">Strategic Market Analysis</h3>
           <p class="text-sm text-[#1A1C29]/65 leading-relaxed">
             We analyze your industry, competition, and audience to uncover real growth opportunities and remove guesswork.
           </p>
@@ -218,7 +218,7 @@ echo '<!-- DEBUG: home-template.php IS loading. hero_bg_url length = ' . strlen(
               <circle cx="12" cy="12" r="2" />
             </svg>
           </div>
-          <h3 class="text-lg font-bold text-[#1A1C29] mb-2 leading-snug">Positioning &amp; Strategic Planning</h3>
+          <h3 class="text-lg font-bold mb-2 leading-snug brand-gradient-text">Positioning &amp; Strategic Planning</h3>
           <p class="text-sm text-[#1A1C29]/65 leading-relaxed">
             We define a clear strategy that aligns your brand, messaging, and goals with how your ideal clients actually make decisions.
           </p>
@@ -233,7 +233,7 @@ echo '<!-- DEBUG: home-template.php IS loading. hero_bg_url length = ' . strlen(
               <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
             </svg>
           </div>
-          <h3 class="text-lg font-bold text-[#1A1C29] mb-2 leading-snug">High-Performance Execution</h3>
+          <h3 class="text-lg font-bold mb-2 leading-snug brand-gradient-text">High-Performance Execution</h3>
           <p class="text-sm text-[#1A1C29]/65 leading-relaxed">
             We execute across the right channels (SEO, paid media, content, and web) with consistency and precision.
           </p>
@@ -248,7 +248,7 @@ echo '<!-- DEBUG: home-template.php IS loading. hero_bg_url length = ' . strlen(
               <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
             </svg>
           </div>
-          <h3 class="text-lg font-bold text-[#1A1C29] mb-2 leading-snug">Measurement, Optimization &amp; Scale</h3>
+          <h3 class="text-lg font-bold mb-2 leading-snug brand-gradient-text">Measurement, Optimization &amp; Scale</h3>
           <p class="text-sm text-[#1A1C29]/65 leading-relaxed">
             We track performance, optimize continuously, and scale what works to drive sustainable, profitable growth.
           </p>
@@ -277,7 +277,7 @@ echo '<!-- DEBUG: home-template.php IS loading. hero_bg_url length = ' . strlen(
 
             <!-- Reason 1 -->
             <div class="relative pl-6 border-l-2 border-[#093D62]/20 hover:border-[#A3CB37] transition-colors duration-200 group">
-              <h3 class="text-xl font-bold text-[#1A1C29] mb-2 leading-snug">Strategy Before Tactics</h3>
+              <h3 class="text-xl font-bold mb-2 leading-snug brand-gradient-text">Strategy Before Tactics</h3>
               <p class="text-base text-[#1A1C29]/65 leading-relaxed">
                 We don't run campaigns without direction. Every action supports your business objectives.
               </p>
@@ -285,7 +285,7 @@ echo '<!-- DEBUG: home-template.php IS loading. hero_bg_url length = ' . strlen(
 
             <!-- Reason 2 -->
             <div class="relative pl-6 border-l-2 border-[#093D62]/20 hover:border-[#A3CB37] transition-colors duration-200 group">
-              <h3 class="text-xl font-bold text-[#1A1C29] mb-2 leading-snug">Bilingual &amp; Cross-Cultural Expertise</h3>
+              <h3 class="text-xl font-bold mb-2 leading-snug brand-gradient-text">Bilingual &amp; Cross-Cultural Expertise</h3>
               <p class="text-base text-[#1A1C29]/65 leading-relaxed">
                 We operate fluently in English and Spanish, helping brands connect authentically across markets.
               </p>
@@ -293,7 +293,7 @@ echo '<!-- DEBUG: home-template.php IS loading. hero_bg_url length = ' . strlen(
 
             <!-- Reason 3 -->
             <div class="relative pl-6 border-l-2 border-[#093D62]/20 hover:border-[#A3CB37] transition-colors duration-200 group">
-              <h3 class="text-xl font-bold text-[#1A1C29] mb-2 leading-snug">100% Customized Solutions</h3>
+              <h3 class="text-xl font-bold mb-2 leading-snug brand-gradient-text">100% Customized Solutions</h3>
               <p class="text-base text-[#1A1C29]/65 leading-relaxed">
                 Every strategy is built specifically for your business — no templates, no generic playbooks.
               </p>
@@ -301,7 +301,7 @@ echo '<!-- DEBUG: home-template.php IS loading. hero_bg_url length = ' . strlen(
 
             <!-- Reason 4 -->
             <div class="relative pl-6 border-l-2 border-[#093D62]/20 hover:border-[#A3CB37] transition-colors duration-200 group">
-              <h3 class="text-xl font-bold text-[#1A1C29] mb-2 leading-snug">Fully Aligned with Your Brand</h3>
+              <h3 class="text-xl font-bold mb-2 leading-snug brand-gradient-text">Fully Aligned with Your Brand</h3>
               <p class="text-base text-[#1A1C29]/65 leading-relaxed">
                 We integrate into your vision, values, and goals so your brand communicates with clarity and consistency.
               </p>
@@ -342,9 +342,10 @@ echo '<!-- DEBUG: home-template.php IS loading. hero_bg_url length = ' . strlen(
       </div>
 
       <!-- Trustindex plugin shortcode — replace with actual shortcode -->
-      <div class="st-reviews" style="--st-review-pattern:url('<?php echo esc_url($img['pattern_reviews']); ?>'); --st-review-stamp:url('<?php echo esc_url($img['stamp_round']); ?>')">
-        <?php echo do_shortcode('[trustindex no-registration=google]'); ?>        
+      <div class="trustindex-container">
+        <?php echo do_shortcode('[trustindex no-registration=google]'); ?>
       </div>
+    </div>
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════

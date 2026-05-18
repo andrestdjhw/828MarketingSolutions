@@ -29,3 +29,31 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   letter-spacing: -0.01em;
 }
+
+/* ─── Brand gradient hover effect ────────────────────────────────────────
+   Default: solid Midnight Logic color.
+   Hover (via .group on the parent element): a deep-insight → growth-signal
+   gradient sweeps the text from left to right.
+   Used in: navbar megamenu items, home Our Process titles, home Why Us titles.
+   ─────────────────────────────────────────────────────────────────────── */
+.brand-gradient-text {
+  color: var(--color-midnight-logic);
+  background-image: linear-gradient(
+    to right,
+    var(--color-deep-insight) 0%,
+    var(--color-deep-insight) 50%,
+    var(--color-growth-signal) 100%
+  );
+  background-size: 200% 100%;
+  background-position: 0% 0%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: currentColor;
+  transition: background-position 500ms ease-out, color 150ms ease-out;
+}
+
+.group:hover .brand-gradient-text {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-position: 100% 0%;
+}
