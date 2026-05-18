@@ -18,9 +18,14 @@
       $home_url = esc_url(home_url('/'));
     ?>
 
-    <!-- Navbar React mount point -->
+    <!-- Navbar React mount point.
+         `display: contents` makes this wrapper invisible to layout —
+         the React children (topbar + navbar) become direct children of <body>
+         for layout purposes, so position:sticky on the navbar works against
+         the full viewport instead of being constrained to this div's height. -->
     <div
       id="render-navbar-here"
+      style="display: contents;"
       data-logo-url="<?php echo esc_url($logo_url); ?>"
       data-home-url="<?php echo $home_url; ?>"
     ></div>

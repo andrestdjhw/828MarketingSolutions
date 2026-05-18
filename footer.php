@@ -9,9 +9,11 @@
   $footer_bg_url = '/wp-content/uploads/2026/05/EstampadoFooter828-scaled.png'; // e.g. '/wp-content/uploads/2026/05/footer-estampado.png'
 ?>
 
-<!-- Footer React mount point -->
+<!-- Footer React mount point. `display: contents` lets the rendered <footer>
+     behave as a direct child of <body> for layout/sticky purposes. -->
 <div
   id="render-footer-here"
+  style="display: contents;"
   data-logo-url="<?php echo esc_url($footer_logo_url); ?>"
   data-bg-url="<?php echo esc_url($footer_bg_url); ?>"
 ></div>
