@@ -19,6 +19,11 @@
 ></div>
 <!-- end footer mount point -->
 
+<!-- Chatbot828 React mount point. Renders a fixed-position FAB
+     bottom-right of the viewport on every page. -->
+<div id="render-chatbot-here"></div>
+<!-- end chatbot mount point -->
+
 <?php wp_footer(); ?>
 </body>
 </html>
