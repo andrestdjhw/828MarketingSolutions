@@ -170,7 +170,7 @@ $tidycal_url = 'https://tidycal.com/828marketingsolutions'; // PLACEHOLDER
               href="mailto:manuel@828marketingsolutions.com"
               class="text-base text-[var(--color-midnight-logic)] font-medium hover:text-[var(--color-growth-signal)] transition-colors break-all"
             >
-              manuel@828marketingsolutions.com
+              info@828marketingsolutions.com
             </a>
             <p class="text-sm text-[var(--color-metric-steel)] mt-1">
               We reply within one business day.

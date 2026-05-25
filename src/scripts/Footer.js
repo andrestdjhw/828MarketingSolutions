@@ -133,7 +133,7 @@ function Footer({ logoUrl, bgUrl }) {
                 href="mailto:manuel@828marketingsolutions.com"
                 className="block text-sm text-white/85 hover:text-[var(--color-growth-signal)] transition-colors duration-150 break-all"
               >
-                manuel@828marketingsolutions.com
+                info@828marketingsolutions.com
               </a>
             </address>
           </div>

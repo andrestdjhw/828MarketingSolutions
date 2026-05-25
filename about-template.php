@@ -32,7 +32,7 @@ $team = [
   ['name' => 'Oscar',           'role' => 'Marketing & Sales',       'initials' => 'O',  'photo_url' => ''],
   ['name' => 'Valeria',         'role' => 'Content',                 'initials' => 'V',  'photo_url' => ''],
   ['name' => 'Angel',           'role' => 'Editor',                  'initials' => 'A',  'photo_url' => ''],
-  ['name' => 'Daniel Galaviz',  'role' => 'Website Developer',       'initials' => 'DG', 'photo_url' => ''],
+  ['name' => 'Daniel',          'role' => 'Website Developer',       'initials' => 'DG', 'photo_url' => ''],
   ['name' => 'Advertising',     'role' => 'Paid Media',              'initials' => 'AD', 'photo_url' => ''],
   ['name' => 'GMB',             'role' => 'Local Presence',          'initials' => 'GM', 'photo_url' => ''],
 ];
@@ -88,7 +88,7 @@ $principles = [
 
 
   <!-- ═══════════════════════════════════════════════════════════════════════ MANUEL'S POV LETTER ═══ -->
-  <section class="bg-[var(--color-paper)] py-20 lg:py-24">
+  <!-- <section class="bg-[var(--color-paper)] py-20 lg:py-24">
     <div class="max-w-3xl mx-auto px-5 sm:px-8 lg:px-12">
 
       <div class="mb-10">
@@ -98,13 +98,7 @@ $principles = [
         </h2>
       </div>
 
-      <!--
-        ═══════════════════════════════════════════════════════════════════════
-        POV LETTER PLACEHOLDER — Manuel writes this himself (~500 words).
-        Replace the paragraphs below with the final letter when delivered.
-        Per brief Section 7.3: 4–6 paragraphs.
-        ═══════════════════════════════════════════════════════════════════════
-      -->
+      
       <div class="space-y-5 text-base lg:text-[17px] text-[var(--color-midnight-logic)] leading-relaxed font-body">
         <p class="font-display text-xl lg:text-2xl text-[var(--color-midnight-logic)] leading-snug italic mb-2">
           [POV LETTER — Manuel writes this]
@@ -136,7 +130,7 @@ $principles = [
         </p>
       </div>
     </div>
-  </section>
+  </section> -->
 
 
   <!-- ═══════════════════════════════════════════════════════════════════════ WHAT WE BELIEVE ═══ -->

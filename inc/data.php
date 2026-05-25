@@ -81,41 +81,49 @@ function eight28_get_industries() {
     [
       'name'  => 'Home Services & Trades',
       'slug'  => 'home-services-and-trades',
+      'image' => '/wp-content/uploads/2026/05/HomeServicesTrades828.png', // e.g. '/wp-content/uploads/2026/05/industry-home-services.jpg'
       'copy'  => 'When the operator is better than the market sees — that\'s the gap we close. Roofing. Drywall. Landscape. Painting. Tree service. We\'ve built the visibility engine for the operators who actually do the work.',
     ],
     [
       'name'  => 'Restaurants & Food Service',
       'slug'  => 'restaurants',
+      'image' => '/wp-content/uploads/2026/05/RestaurantesComidas828.png',
       'copy'  => 'A full house is not the same as a full restaurant. We build the strategy that brings the right diners, on the right nights, paying the right ticket — for operators who already know how to feed them.',
     ],
     [
       'name'  => 'Beauty, Wellness & Personal Care',
       'slug'  => 'beauty-wellness',
+      'image' => '/wp-content/uploads/2026/05/RetailWholesaleManufacturer.png',
       'copy'  => 'When the practitioner is real, the brand needs to be real too. We build the positioning that makes wellness operators choosable — beyond word-of-mouth and into market authority.',
     ],
     [
       'name'  => 'Janitorial & Commercial Services',
       'slug'  => 'janitorial-commercial',
+      'image' => '/wp-content/uploads/2026/05/JanitorialIndustries.png',
       'copy'  => 'The $112B commercial cleaning industry is fragmented, undermarketed, and ready for the operator who treats it like a real business. We build the system that gets you out of the bid race.',
     ],
     [
       'name'  => 'Retail, Wholesale & Manufacturing',
       'slug'  => 'retail-wholesale-manufacturing',
+      'image' => '/wp-content/uploads/2026/05/image.png',
       'copy'  => 'When "one of dozens" is the market\'s default frame, the only path out is a B2B narrative that names the buyer specifically. We built it for a tortilleria. We can build it for you.',
     ],
     [
       'name'  => 'Financial / Tax / Accounting',
       'slug'  => 'financial-tax-accounting',
+      'image' => '/wp-content/uploads/2026/05/FinancialAccounting828.png',
       'copy'  => 'We work with the people who train the Latino tax industry. CPAs, EAs, wealth advisors, bookkeepers, tax resolution specialists — operators who serve a community that English-first agencies don\'t understand.',
     ],
     [
       'name'  => 'Healthcare & Specialty Services',
       'slug'  => 'healthcare-specialty',
+      'image' => '/wp-content/uploads/2026/05/HealthIndustries828.png',
       'copy'  => 'Cardiovascular health. Women\'s health. Specialty providers. We build the brand and content infrastructure for healthcare operators who serve patient communities the system has overlooked.',
     ],
     [
       'name'  => 'Professional Services & B2B',
       'slug'  => 'professional-services-b2b',
+      'image' => '/wp-content/uploads/2026/05/ProfesionalServicesB2bB828.png',
       'copy'  => 'B2B services are not consumer marketing. The buyer is sharper, the cycle is longer, the trust signals are different. We build for operators who sell to other operators — and need their visibility to match.',
     ],
   ];

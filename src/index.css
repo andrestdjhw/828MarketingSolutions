@@ -184,3 +184,14 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
+
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   reCAPTCHA v3 BADGE — hide the floating bottom-right widget.
+   Google's ToS allows hiding the badge IF the disclaimer text is shown
+   inline next to the form's submit button (see ContactForm.js).
+   ═══════════════════════════════════════════════════════════════════════════ */
+.grecaptcha-badge {
+  visibility: hidden !important;
+}

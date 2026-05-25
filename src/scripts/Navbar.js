@@ -113,25 +113,27 @@ function Navbar({ logoUrl, homeUrl = "/" }) {
 
   return (
     <>
-      {/* ═══ TOPBAR — Midnight Logic, hidden on mobile, disappears on scroll
+      {/* ═══ TOPBAR — Midnight Logic, disappears on scroll
+            On mobile: only social icons (centered).
+            On desktop (lg+): email + phone (left) + social icons (right).
             Lives outside the sticky element so it scrolls away naturally. ═══ */}
       <div
-        className={`hidden lg:block bg-[var(--color-midnight-logic)] text-white overflow-hidden transition-all duration-300 ${
+        className={`block bg-[var(--color-midnight-logic)] text-white overflow-hidden transition-all duration-300 ${
           scrolled ? "max-h-0 opacity-0" : "max-h-12 opacity-100"
         }`}
         aria-hidden={scrolled}
       >
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-          <div className="flex items-center justify-between h-10 text-[12px]">
+          <div className="flex items-center justify-center lg:justify-between h-10 text-[12px]">
 
-            {/* LEFT: email + phone */}
-            <div className="flex items-center gap-6">
+            {/* LEFT: email + phone — DESKTOP ONLY */}
+            <div className="hidden lg:flex items-center gap-6">
               <a
-                href="mailto:manuel@828marketingsolutions.com"
+                href="mailto:info@828marketingsolutions.com"
                 className="flex items-center gap-2 text-white/85 hover:text-[var(--color-growth-signal)] transition-colors duration-150"
               >
                 <MailIcon />
-                <span>manuel@828marketingsolutions.com</span>
+                <span>info@828marketingsolutions.com</span>
               </a>
 
               <a
@@ -143,8 +145,8 @@ function Navbar({ logoUrl, homeUrl = "/" }) {
               </a>
             </div>
 
-            {/* RIGHT: social icons */}
-            <div className="flex items-center gap-4">
+            {/* RIGHT (desktop) / CENTER (mobile): social icons */}
+            <div className="flex items-center gap-5 lg:gap-4">
               {SOCIALS.map(({ label, href }) => {
                 const Icon = SOCIAL_ICONS[label]
                 return (
@@ -288,7 +290,7 @@ function Navbar({ logoUrl, homeUrl = "/" }) {
               {/* Mobile contact links (visible only when menu is open) */}
               <div className="mt-4 pt-4 px-2 border-t border-[rgba(26,28,41,0.1)] space-y-3">
                 <a href="mailto:manuel@828marketingsolutions.com" className="flex items-center gap-2 text-sm text-[var(--color-midnight-logic)] hover:text-[var(--color-growth-signal)]">
-                  <MailIcon /> manuel@828marketingsolutions.com
+                  <MailIcon /> info@828marketingsolutions.com
                 </a>
                 <a href="tel:+19497755940" className="flex items-center gap-2 text-sm text-[var(--color-midnight-logic)] hover:text-[var(--color-growth-signal)]">
                   <PhoneIcon /> +1 (949) 775-5940
