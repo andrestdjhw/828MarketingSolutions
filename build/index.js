@@ -1761,6 +1761,9 @@ __webpack_require__.r(__webpack_exports__);
    ═══════════════════════════════════════════════════════════════════════════ */
 
 const NAV_ITEMS = [{
+  label: "Home",
+  href: "/"
+}, {
   label: "Case Studies",
   href: "/case-studies"
 }, {

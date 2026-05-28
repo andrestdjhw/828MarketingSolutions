@@ -76,6 +76,30 @@ $industries   = eight28_get_industries();
                 828 builds the growth system that makes the market finally see and choose what you've already built.
               </p>
             </div>
+
+            <!-- CTAs -->
+            <div class="flex flex-col sm:flex-row gap-3 mt-6">
+              <a
+                href="/contact"
+                class="group inline-flex items-center justify-center gap-2 bg-[var(--color-growth-signal)] text-[var(--color-midnight-logic)] px-6 py-3 rounded-sm font-body font-medium text-[12px] uppercase tracking-[0.05em] hover:brightness-95 transition-all duration-200"
+              >
+                Book a Strategy Call
+                <svg class="w-4 h-4 transform transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </a>
+
+              <a
+                href="tel:+19497755940"
+                class="group inline-flex items-center justify-center gap-2 bg-transparent text-white px-6 py-3 rounded-sm font-body font-medium text-[12px] uppercase tracking-[0.05em] border border-white/30 hover:border-[var(--color-growth-signal)] hover:text-[var(--color-growth-signal)] transition-all duration-200"
+              >
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+                Call (949) 775-5940
+              </a>
+            </div>
           </div>
 
           <!-- BOTTOM: 3 market opportunity stats — visual ballast to balance the dense form on the right -->
@@ -249,7 +273,7 @@ $industries   = eight28_get_industries();
     ],
   ];
   ?>
-  <!-- <section class="bg-[var(--color-paper)] py-20 lg:py-24 border-b border-[rgba(26,28,41,0.05)]">
+<!--   <section class="bg-[var(--color-paper)] py-20 lg:py-24 border-b border-[rgba(26,28,41,0.05)]">
     <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
 
       
@@ -381,7 +405,7 @@ $industries   = eight28_get_industries();
     </div>
   </section> -->
 
-  <!-- Testimonials controller — vanilla JS, no library deps -->
+  
   <script>
   (function() {
     const mainEl   = document.getElementById('testimonial-main');
@@ -475,74 +499,7 @@ $industries   = eight28_get_industries();
   })();
   </script>
 
-
-  <!-- ═══════════════════════════════════════════════════════════════════════ 6.3  POV STATEMENT ═══ -->
-  <section class="relative bg-[var(--color-deep-insight)] text-white overflow-hidden">
-    <div class="circuit-overlay" aria-hidden="true"></div>
-    <div class="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-12 py-24 lg:py-32 text-center">
-      <p class="font-display font-bold text-[1.75rem] sm:text-[2.25rem] lg:text-[2.75rem] leading-[1.18] tracking-tight text-white max-w-3xl mx-auto">
-        Most agencies sell marketing tactics.<br />
-        We sell <span class="text-[var(--color-growth-signal)]">visibility</span> for businesses that already deserve it.
-      </p>
-      <div class="my-10 mx-auto w-16 h-px bg-[var(--color-growth-signal)]"></div>
-      <p class="font-display text-lg lg:text-xl text-white/85 leading-relaxed max-w-2xl mx-auto">
-        We don't make your business worth choosing we make sure the market sees it's already worth choosing.
-      </p>
-    </div>
-  </section>
-
-
-  <!-- ═══════════════════════════════════════════════════════════════════════ 6.4  CASE STUDY WALL ═══ -->
-  <section id="case-studies" class="bg-[var(--color-paper-soft)] py-20 lg:py-24">
-    <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-      <div class="text-center mb-12 max-w-2xl mx-auto">
-        <p class="eyebrow eyebrow-blue mb-3">Case Studies</p>
-        <h2 class="font-display font-bold text-3xl lg:text-4xl text-[var(--color-midnight-logic)] tracking-tight leading-tight mb-4">They built it. We made the market see it.</h2>
-        <p class="text-base text-[var(--color-metric-steel)] leading-relaxed">Eight operators. Eight transformations. Real numbers in USD.</p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <?php foreach ($case_studies as $i => $cs):
-          $bg_class = ($i % 2 === 0) ? 'bg-white' : 'bg-[var(--color-paper-soft)] ring-1 ring-[rgba(26,28,41,0.08)]';
-        ?>
-          <a href="/case-studies" class="group <?php echo $bg_class; ?> rounded-sm p-6 flex flex-col border border-[rgba(26,28,41,0.08)] hover:border-[var(--color-growth-signal)] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200">
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-[10px] font-body font-medium uppercase tracking-[0.15em] text-[var(--color-strategic-blue)]"><?php echo esc_html($cs['industry']); ?></span>
-              <span class="text-[10px] font-body text-[var(--color-metric-steel)]"><?php echo esc_html($cs['location']); ?></span>
-            </div>
-            <div class="flex items-center gap-1.5 mb-4" aria-label="Phases delivered">
-              <?php for ($p = 1; $p <= 5; $p++):
-                $delivered = in_array($p, $cs['phases']);
-                $cls = $delivered ? 'bg-[var(--color-growth-signal)] text-[var(--color-midnight-logic)] border-[var(--color-growth-signal)]' : 'bg-transparent text-[rgba(26,28,41,0.35)] border-[rgba(26,28,41,0.25)]';
-              ?>
-                <span class="flex items-center justify-center w-6 h-6 rounded-full border text-[10px] font-body font-bold <?php echo $cls; ?>"><?php echo $p; ?></span>
-              <?php endfor; ?>
-            </div>
-            <h3 class="font-display font-bold text-base lg:text-[17px] text-[var(--color-midnight-logic)] leading-[1.25] mb-3"><?php echo esc_html($cs['headline']); ?></h3>
-            <p class="text-xs text-[var(--color-metric-steel)] leading-relaxed mb-2"><span class="font-medium text-[var(--color-midnight-logic)]">Challenge:</span> <?php echo esc_html($cs['challenge']); ?></p>
-            <p class="text-xs text-[var(--color-metric-steel)] leading-relaxed mb-3"><span class="font-medium text-[var(--color-midnight-logic)]">Transformation:</span> <?php echo esc_html($cs['transformation']); ?></p>
-            <div class="mt-auto pt-4 border-t border-[rgba(26,28,41,0.08)]">
-              <p class="text-xs font-body font-medium text-[var(--color-midnight-logic)] leading-snug"><?php echo esc_html($cs['proof']); ?></p>
-              <span class="mt-3 inline-flex items-center gap-1 text-[11px] font-body font-medium uppercase tracking-[0.08em] text-[var(--color-strategic-blue)] group-hover:text-[var(--color-growth-signal)] transition-colors">
-                Read the full story
-                <svg class="w-3 h-3 transform transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
-              </span>
-            </div>
-          </a>
-        <?php endforeach; ?>
-      </div>
-
-      <div class="text-center mt-12">
-        <a href="/case-studies" class="inline-flex items-center gap-2 bg-[var(--color-midnight-logic)] text-white px-6 py-3 rounded-sm font-body font-medium text-[12px] uppercase tracking-[0.05em] hover:bg-[var(--color-deep-insight)] transition-colors duration-200">
-          See all case studies
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
-        </a>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ═══════════════════════════════════════════════════════════════════════ 6.5  INDUSTRIES CAROUSEL ═══
+<!-- ═══════════════════════════════════════════════════════════════════════ 6.5  INDUSTRIES CAROUSEL ═══
        King Kong "Success Story"-style horizontal carousel.
        - Dark background (with optional WP Media image) so cards pop
        - Each card: 3:4 portrait aspect, large title overlay, optional bg image
@@ -660,6 +617,74 @@ $industries   = eight28_get_industries();
       </div>
     </div>
   </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ 6.3  POV STATEMENT ═══ -->
+  <section class="relative bg-[var(--color-deep-insight)] text-white overflow-hidden">
+    <div class="circuit-overlay" aria-hidden="true"></div>
+    <div class="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-12 py-24 lg:py-32 text-center">
+      <p class="font-display font-bold text-[1.75rem] sm:text-[2.25rem] lg:text-[2.75rem] leading-[1.18] tracking-tight text-white max-w-3xl mx-auto">
+        Most agencies sell marketing tactics.<br />
+        We sell <span class="text-[var(--color-growth-signal)]">visibility</span> for businesses that already deserve it.
+      </p>
+      <div class="my-10 mx-auto w-16 h-px bg-[var(--color-growth-signal)]"></div>
+      <p class="font-display text-lg lg:text-xl text-white/85 leading-relaxed max-w-2xl mx-auto">
+        We don't make your business worth choosing — we make sure the market sees it's already worth choosing.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ 6.4  CASE STUDY WALL ═══ -->
+  <!-- <section id="case-studies" class="bg-[var(--color-paper-soft)] py-20 lg:py-24">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+      <div class="text-center mb-12 max-w-2xl mx-auto">
+        <p class="eyebrow eyebrow-blue mb-3">Case Studies</p>
+        <h2 class="font-display font-bold text-3xl lg:text-4xl text-[var(--color-midnight-logic)] tracking-tight leading-tight mb-4">They built it. We made the market see it.</h2>
+        <p class="text-base text-[var(--color-metric-steel)] leading-relaxed">Eight operators. Eight transformations. Real numbers in USD.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <?php foreach ($case_studies as $i => $cs):
+          $bg_class = ($i % 2 === 0) ? 'bg-white' : 'bg-[var(--color-paper-soft)] ring-1 ring-[rgba(26,28,41,0.08)]';
+        ?>
+          <a href="/case-studies" class="group <?php echo $bg_class; ?> rounded-sm p-6 flex flex-col border border-[rgba(26,28,41,0.08)] hover:border-[var(--color-growth-signal)] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[10px] font-body font-medium uppercase tracking-[0.15em] text-[var(--color-strategic-blue)]"><?php echo esc_html($cs['industry']); ?></span>
+              <span class="text-[10px] font-body text-[var(--color-metric-steel)]"><?php echo esc_html($cs['location']); ?></span>
+            </div>
+            <div class="flex items-center gap-1.5 mb-4" aria-label="Phases delivered">
+              <?php for ($p = 1; $p <= 5; $p++):
+                $delivered = in_array($p, $cs['phases']);
+                $cls = $delivered ? 'bg-[var(--color-growth-signal)] text-[var(--color-midnight-logic)] border-[var(--color-growth-signal)]' : 'bg-transparent text-[rgba(26,28,41,0.35)] border-[rgba(26,28,41,0.25)]';
+              ?>
+                <span class="flex items-center justify-center w-6 h-6 rounded-full border text-[10px] font-body font-bold <?php echo $cls; ?>"><?php echo $p; ?></span>
+              <?php endfor; ?>
+            </div>
+            <h3 class="font-display font-bold text-base lg:text-[17px] text-[var(--color-midnight-logic)] leading-[1.25] mb-3"><?php echo esc_html($cs['headline']); ?></h3>
+            <p class="text-xs text-[var(--color-metric-steel)] leading-relaxed mb-2"><span class="font-medium text-[var(--color-midnight-logic)]">Challenge:</span> <?php echo esc_html($cs['challenge']); ?></p>
+            <p class="text-xs text-[var(--color-metric-steel)] leading-relaxed mb-3"><span class="font-medium text-[var(--color-midnight-logic)]">Transformation:</span> <?php echo esc_html($cs['transformation']); ?></p>
+            <div class="mt-auto pt-4 border-t border-[rgba(26,28,41,0.08)]">
+              <p class="text-xs font-body font-medium text-[var(--color-midnight-logic)] leading-snug"><?php echo esc_html($cs['proof']); ?></p>
+              <span class="mt-3 inline-flex items-center gap-1 text-[11px] font-body font-medium uppercase tracking-[0.08em] text-[var(--color-strategic-blue)] group-hover:text-[var(--color-growth-signal)] transition-colors">
+                Read the full story
+                <svg class="w-3 h-3 transform transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+              </span>
+            </div>
+          </a>
+        <?php endforeach; ?>
+      </div>
+
+      <div class="text-center mt-12">
+        <a href="/case-studies" class="inline-flex items-center gap-2 bg-[var(--color-midnight-logic)] text-white px-6 py-3 rounded-sm font-body font-medium text-[12px] uppercase tracking-[0.05em] hover:bg-[var(--color-deep-insight)] transition-colors duration-200">
+          See all case studies
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+        </a>
+      </div>
+    </div>
+  </section> -->
+
+
+  
 
   <!-- Industries carousel controller — vanilla JS, no library deps -->
   <script>

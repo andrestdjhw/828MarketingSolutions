@@ -12,6 +12,7 @@ import React, { useState, useEffect } from "react"
    ═══════════════════════════════════════════════════════════════════════════ */
 
 const NAV_ITEMS = [
+  { label: "Home", href: "/" },
   { label: "Case Studies", href: "/case-studies" },
   { label: "How We Work", href: "/how-we-work" },
   { label: "Industries",  href: "/industries" },
