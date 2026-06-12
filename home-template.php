@@ -83,7 +83,7 @@ $industries   = eight28_get_industries();
                 href="/contact"
                 class="group inline-flex items-center justify-center gap-2 bg-[var(--color-growth-signal)] text-[var(--color-midnight-logic)] px-6 py-3 rounded-sm font-body font-medium text-[12px] uppercase tracking-[0.05em] hover:brightness-95 transition-all duration-200"
               >
-                Book a Strategy Call
+                BUILD MY GROWTH PLAN
                 <svg class="w-4 h-4 transform transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <line x1="5" y1="12" x2="19" y2="12" />
                   <polyline points="12 5 19 12 12 19" />
@@ -97,10 +97,48 @@ $industries   = eight28_get_industries();
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                 </svg>
-                Call (949) 775-5940
+                Call US DIRECTLY (949) 775-5940
               </a>
             </div>
+
+            <!-- TidyCal: request a 30-min call -->
+            <a
+              href="https://tidycal.com/828marketingsolutions"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group inline-flex items-center gap-2 mt-4 font-body font-medium text-[12px] uppercase tracking-[0.05em] text-white/85 hover:text-[var(--color-growth-signal)] transition-colors duration-200"
+            >
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              Request a 30-min call
+              <svg class="w-3.5 h-3.5 transform transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+              </svg>
+            </a>
           </div>
+
+          <!-- BBB Accredited badge -->
+          <a
+            href="https://www.bbb.org/us/ca/irvine/profile/marketing-consultant/828-marketing-solutions-llc-1126-1000164367"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bbb-shine group relative inline-flex items-center gap-3 mt-6 pl-2.5 pr-4 py-2 rounded-full bg-white/[0.06] border border-white/15 overflow-hidden hover:border-[var(--color-growth-signal)]/60 transition-colors duration-200"
+            aria-label="828 Marketing Solutions is a Better Business Bureau Accredited Business"
+          >
+            <span class="bbb-pulse flex items-center justify-center w-8 h-8 rounded-full bg-[var(--color-growth-signal)] text-[var(--color-midnight-logic)] shrink-0">
+              <svg class="w-5 h-5" viewBox="0 0 50 50" fill="currentColor" aria-hidden="true">
+                <path d="M 9.2832031 4 C 7.488935 4 5.9052102 5.2051958 5.4277344 6.9355469 L 2 19.365234 L 2 19.5 C 2 23.078268 4.9217323 26 8.5 26 C 10.813035 26 12.845511 24.77516 13.998047 22.945312 C 15.146939 24.778014 17.180833 26 19.5 26 C 21.819167 26 23.853061 24.778014 25.001953 22.945312 C 26.154489 24.77516 28.186965 26 30.5 26 C 32.813993 26 34.847721 24.77447 36 22.943359 C 37.152279 24.77447 39.186007 26 41.5 26 C 45.078268 26 48 23.078268 48 19.5 L 48 19.365234 L 44.570312 6.9355469 C 44.092963 5.2056548 42.509782 4 40.714844 4 L 9.2832031 4 z M 9.2832031 6 L 14.851562 6 L 13.197266 18 L 4.4511719 18 L 7.3554688 7.46875 C 7.5959929 6.597101 8.3794712 6 9.2832031 6 z M 26 6 L 33.128906 6 L 34.783203 18 L 26 18 L 26 6 z M 15 18 L 24 18 L 24 19.5 C 24 19.668891 24.012611 19.834272 24.025391 20 L 15 20 L 15 19.5 L 15 18 z M 36.802734 18 L 45.548828 18 L 45.984375 19.580078 C 45.981749 19.724009 45.951091 19.859765 45.935547 20 L 37.050781 20 C 37.032383 19.833631 37 19.67153 37 19.5 L 37 19.431641 L 36.802734 18 z M 4.0644531 20 L 12.949219 20 C 12.699714 22.256206 10.826202 24 8.5 24 C 6.175282 24 4.3143567 22.254621 4.0644531 20 z M 26.099609 20 L 34.900391 20 C 34.642986 22.247621 32.820142 24 30.5 24 C 28.179858 24 26.357014 22.247621 26.099609 20 z M 14 25.974609 C 12.517 27.235609 10.599 28 8.5 28 C 6.845 28 5.306 27.519172 4 26.701172 L 4 43 C 4 44.654 5.346 46 7 46 L 43 46 C 44.654 46 46 44.654 46 43 L 46 26.701172 C 44.694 27.519172 43.155 28 41.5 28 C 39.401 28 37.483 27.235609 36 25.974609 C 34.517 27.235609 32.599 28 30.5 28 C 28.401 28 26.483 27.235609 25 25.974609 C 23.517 27.235609 21.599 28 19.5 28 C 17.401 28 15.483 27.235609 14 25.974609 z M 35.5 29 C 37.546 29 39.372453 29.952547 40.564453 31.435547 L 39.132812 32.867188 C 38.314813 31.740187 36.996 31 35.5 31 C 33.019 31 31 33.019 31 35.5 C 31 37.981 33.019 40 35.5 40 C 37.453 40 39.102609 38.742 39.724609 37 L 36 37 L 36 35 L 41.974609 35 C 41.986609 35.166 42 35.331 42 35.5 C 42 39.084 39.084 42 35.5 42 C 31.916 42 29 39.084 29 35.5 C 29 31.916 31.916 29 35.5 29 z" />
+              </svg>
+            </span>
+            <span class="flex flex-col leading-tight">
+              <span class="font-display font-bold text-[13px] text-white tracking-tight">BBB Accredited Business</span>
+              <span class="text-[10px] font-body uppercase tracking-[0.12em] text-white/55">Better Business Bureau</span>
+            </span>
+          </a>
 
           <!-- BOTTOM: 3 market opportunity stats — visual ballast to balance the dense form on the right -->
           <div class="grid grid-cols-3 gap-3 lg:gap-4 pt-6 border-t border-white/10">
@@ -214,12 +252,9 @@ $industries   = eight28_get_industries();
   <?php
   // ───────────────────────────────────────────────────────────────────────────
   // TESTIMONIALS — edit this array directly.
-  // For each entry:
-  //   - video_url:  MP4 from WP Media Library (e.g. /wp-content/uploads/2026/05/testimonial-ruben.mp4)
-  //   - poster_url: a JPG/PNG thumbnail shown before play. Recommended: a frame
-  //                 from the video itself, or a portrait of the speaker.
-  //   - thumb_url:  smaller thumbnail for the carousel below (square or 4:3).
-  //                 Can reuse poster_url if you don't have a separate thumb.
+  //   - video_url:  MP4 from WP Media Library
+  //   - poster_url: a JPG/PNG thumbnail shown before play.
+  //   - thumb_url:  smaller thumbnail for the carousel below.
   //   - quote:      headline quote in the big card overlay (keep under ~25 words)
   //   - name / title / company: caption line under the quote (lime).
   //
@@ -231,9 +266,9 @@ $industries   = eight28_get_industries();
       'title'      => 'Role',
       'company'    => 'Company',
       'quote'      => 'Replace this with the real client quote. Keep it under 25 words. Lead with the emotion: what was broken before, what changed after.',
-      'video_url'  => '', // e.g. '/wp-content/uploads/2026/05/testimonial-1.mp4'
-      'poster_url' => '', // e.g. '/wp-content/uploads/2026/05/testimonial-1-poster.jpg'
-      'thumb_url'  => '', // e.g. '/wp-content/uploads/2026/05/testimonial-1-thumb.jpg'
+      'video_url'  => '',
+      'poster_url' => '',
+      'thumb_url'  => '',
     ],
     [
       'name'       => 'Client Name',

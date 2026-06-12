@@ -739,9 +739,14 @@ __webpack_require__.r(__webpack_exports__);
 
    Field mapping confirmed with Manuel Luna (May 2026):
      - Standard properties:  firstname, lastname, company, phone, email,
-                             website, city, state, message
-     - Custom properties:    service_interest, annual_revenue_range,
-                             biggest_growth_challenge, growth_challenge__other
+                             website, city, message
+     - Custom properties:    service_interest, biggest_growth_challenge,
+                             growth_challenge__other
+
+   CHANGE (June 2026): `annual_revenue_range` and `state` removed. Manuel
+   pruned both from the HubSpot form after a lead analysis showed prospects
+   were dropping off the form on those two fields. The React form below now
+   matches the live HubSpot form exactly.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 // ─── HubSpot config ──────────────────────────────────────────────────────
@@ -808,14 +813,6 @@ async function getRecaptchaToken(action = "contact_form_submit") {
 
 // ─── Field option lists (values must match HubSpot exactly - Manuel-confirmed) ──
 const SERVICE_INTERESTS = ["Industry Report", "Website Development & SEO", "Social Media Management", "Paid Advertisement", "Brand Identity & Positioning", "Pitch Deck & Capabilities Development"];
-
-// Use explicit ASCII hyphen-minus (U+002D) via escape sequences to prevent
-// any editor / build-tool smart-punctuation from silently converting "-" into
-// "-" (en dash U+2013) or "-" (em dash U+2014). HubSpot does byte-for-byte
-// string matching on enumeration values, so even a single visually-identical
-// character mismatch causes a REQUIRED_FIELD validation error.
-const H = "\u002D"; // ASCII hyphen-minus
-const REVENUE_RANGES = [`0 ${H} 250K`, `250K ${H} 500K`, `500K ${H} 1M`, `1M+`];
 const GROWTH_CHALLENGES = ["Not enough leads coming in", "Customers don't know who we are", "Can't compete with bigger companies in our market", "Marketing feels expensive but unclear", "Other"];
 
 // ─── Validation helpers ──────────────────────────────────────────────────
@@ -866,9 +863,7 @@ function ContactForm() {
     email: "",
     website: "",
     service_interest: "",
-    annual_revenue_range: "",
     city: "",
-    state: "",
     biggest_growth_challenge: [],
     growth_challenge__other: "",
     message: "",
@@ -907,9 +902,7 @@ function ContactForm() {
     if (!form.email.trim()) e.email = "Email is required";else if (!validateEmail(form.email)) e.email = "Enter a valid email address";
     if (!validateUrl(form.website)) e.website = "Enter a valid URL";
     if (!form.service_interest) e.service_interest = "Select a service interest";
-    if (!form.annual_revenue_range) e.annual_revenue_range = "Select a revenue range";
     if (!form.city.trim()) e.city = "City is required";
-    if (!form.state.trim()) e.state = "State/region is required";
     if (!form.biggest_growth_challenge.length) {
       e.biggest_growth_challenge = "Select at least one";
     } else if (form.biggest_growth_challenge.includes("Other") && !form.growth_challenge__other.trim()) {
@@ -983,16 +976,8 @@ function ContactForm() {
       value: form.service_interest
     }, {
       objectTypeId: "0-1",
-      name: "annual_revenue_range",
-      value: form.annual_revenue_range
-    }, {
-      objectTypeId: "0-1",
       name: "city",
       value: form.city.trim()
-    }, {
-      objectTypeId: "0-1",
-      name: "state",
-      value: form.state.trim()
     },
     // Multi-checkbox: HubSpot expects semicolon-joined string for enumeration
     // properties of type "checkbox" (multi-select)
@@ -1228,17 +1213,6 @@ function ContactForm() {
           placeholder: "Select\u2026"
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Field, {
-        label: "Annual Revenue Range",
-        required: true,
-        error: errors.annual_revenue_range,
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(SelectInput, {
-          value: form.annual_revenue_range,
-          onChange: v => update("annual_revenue_range", v),
-          options: REVENUE_RANGES,
-          disabled: isSubmitting,
-          placeholder: "Select\u2026"
-        })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Field, {
         label: "City",
         required: true,
         error: errors.city,
@@ -1249,18 +1223,6 @@ function ContactForm() {
           className: inputClass,
           disabled: isSubmitting,
           autoComplete: "address-level2"
-        })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Field, {
-        label: "State/Region",
-        required: true,
-        error: errors.state,
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
-          type: "text",
-          value: form.state,
-          onChange: e => update("state", e.target.value),
-          className: inputClass,
-          disabled: isSubmitting,
-          autoComplete: "address-level1"
         })
       })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
@@ -1563,6 +1525,37 @@ const GMBIcon = () => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE
     d: "M11.166 20.194c.806.577 2.809 1.923 3.222 2.358.412.435.023 1.099.023 1.099l.618.252c.137-.298.962-1.397 1.511-2.084.496-.62.926-1.706.941-2.503.047-2.572-3.367-3.794-4.949-5.237-.778-.71-.16-1.122-.16-1.122l-.527-.343C9.808 14.926 7.662 17.686 11.166 20.194zM12.922 11.605c1.969 1.74 5.435 3.548 5.679 4.717.318 1.523-.412 2.382-.412 2.382l.394.321c.213-.304.451-.591.67-.891.892-1.222 1.752-2.463 2.629-3.695 2.004-2.818 1.254-5.49-1.765-7.648-1.537-1.098-3.032-2.26-4.584-3.339-.871-.733-.275-2.107-.275-2.107l-.367-.32c0 0-3.286 3.984-3.573 5.588C11.045 8.148 10.953 9.865 12.922 11.605zM23 27L22.341 25 7.659 25 7 27 11.19 27 11.822 29 18.217 29 18.816 27z"
   })
 });
+
+// BBB Accredited Business badge — animated pill (uses .bbb-pulse / .bbb-shine
+// keyframes defined in src/index.css). Reuses the BBB mark in a lime ring.
+const BBBAccreditedBadge = () => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("a", {
+  href: "https://www.bbb.org/us/ca/irvine/profile/marketing-consultant/828-marketing-solutions-llc-1126-1000164367",
+  target: "_blank",
+  rel: "noopener noreferrer",
+  "aria-label": "828 Marketing Solutions is a Better Business Bureau Accredited Business",
+  className: "bbb-shine group relative inline-flex items-center gap-3 mt-6 pl-2.5 pr-4 py-2 rounded-full bg-white/[0.06] border border-white/15 overflow-hidden hover:border-[var(--color-growth-signal)]/60 transition-colors duration-200",
+  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+    className: "bbb-pulse flex items-center justify-center w-8 h-8 rounded-full bg-[var(--color-growth-signal)] text-[var(--color-midnight-logic)] shrink-0",
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("svg", {
+      className: "w-5 h-5",
+      viewBox: "0 0 50 50",
+      fill: "currentColor",
+      "aria-hidden": "true",
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("path", {
+        d: "M 9.2832031 4 C 7.488935 4 5.9052102 5.2051958 5.4277344 6.9355469 L 2 19.365234 L 2 19.5 C 2 23.078268 4.9217323 26 8.5 26 C 10.813035 26 12.845511 24.77516 13.998047 22.945312 C 15.146939 24.778014 17.180833 26 19.5 26 C 21.819167 26 23.853061 24.778014 25.001953 22.945312 C 26.154489 24.77516 28.186965 26 30.5 26 C 32.813993 26 34.847721 24.77447 36 22.943359 C 37.152279 24.77447 39.186007 26 41.5 26 C 45.078268 26 48 23.078268 48 19.5 L 48 19.365234 L 44.570312 6.9355469 C 44.092963 5.2056548 42.509782 4 40.714844 4 L 9.2832031 4 z M 9.2832031 6 L 14.851562 6 L 13.197266 18 L 4.4511719 18 L 7.3554688 7.46875 C 7.5959929 6.597101 8.3794712 6 9.2832031 6 z M 26 6 L 33.128906 6 L 34.783203 18 L 26 18 L 26 6 z M 15 18 L 24 18 L 24 19.5 C 24 19.668891 24.012611 19.834272 24.025391 20 L 15 20 L 15 19.5 L 15 18 z M 36.802734 18 L 45.548828 18 L 45.984375 19.580078 C 45.981749 19.724009 45.951091 19.859765 45.935547 20 L 37.050781 20 C 37.032383 19.833631 37 19.67153 37 19.5 L 37 19.431641 L 36.802734 18 z M 4.0644531 20 L 12.949219 20 C 12.699714 22.256206 10.826202 24 8.5 24 C 6.175282 24 4.3143567 22.254621 4.0644531 20 z M 26.099609 20 L 34.900391 20 C 34.642986 22.247621 32.820142 24 30.5 24 C 28.179858 24 26.357014 22.247621 26.099609 20 z M 14 25.974609 C 12.517 27.235609 10.599 28 8.5 28 C 6.845 28 5.306 27.519172 4 26.701172 L 4 43 C 4 44.654 5.346 46 7 46 L 43 46 C 44.654 46 46 44.654 46 43 L 46 26.701172 C 44.694 27.519172 43.155 28 41.5 28 C 39.401 28 37.483 27.235609 36 25.974609 C 34.517 27.235609 32.599 28 30.5 28 C 28.401 28 26.483 27.235609 25 25.974609 C 23.517 27.235609 21.599 28 19.5 28 C 17.401 28 15.483 27.235609 14 25.974609 z M 35.5 29 C 37.546 29 39.372453 29.952547 40.564453 31.435547 L 39.132812 32.867188 C 38.314813 31.740187 36.996 31 35.5 31 C 33.019 31 31 33.019 31 35.5 C 31 37.981 33.019 40 35.5 40 C 37.453 40 39.102609 38.742 39.724609 37 L 36 37 L 36 35 L 41.974609 35 C 41.986609 35.166 42 35.331 42 35.5 C 42 39.084 39.084 42 35.5 42 C 31.916 42 29 39.084 29 35.5 C 29 31.916 31.916 29 35.5 29 z"
+      })
+    })
+  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("span", {
+    className: "flex flex-col leading-tight",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+      className: "font-display font-bold text-[13px] text-white tracking-tight",
+      children: "BBB Accredited Business"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+      className: "text-[10px] font-body uppercase tracking-[0.12em] text-white/55",
+      children: "Better Business Bureau"
+    })]
+  })]
+});
 const NAV_ITEMS = [{
   label: "Case Studies",
   href: "/case-studies"
@@ -1643,6 +1636,25 @@ function Footer({
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
             className: "font-display text-lg lg:text-xl text-white leading-snug max-w-xs",
             children: "Connecting Intelligence with Intention."
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(BBBAccreditedBadge, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("p", {
+            className: "flex items-center gap-1.5 mt-3 text-[11px] font-body uppercase tracking-[0.1em] text-white/55",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("svg", {
+              className: "w-3.5 h-3.5 text-[var(--color-growth-signal)] shrink-0",
+              viewBox: "0 0 24 24",
+              fill: "none",
+              stroke: "currentColor",
+              strokeWidth: "2",
+              strokeLinecap: "round",
+              strokeLinejoin: "round",
+              "aria-hidden": "true",
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("path", {
+                d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("circle", {
+                cx: "12",
+                cy: "10",
+                r: "3"
+              })]
+            }), "Serving all 50 states"]
           })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
           className: "md:col-span-3",
@@ -1754,7 +1766,7 @@ __webpack_require__.r(__webpack_exports__);
    ─────────────────────────────────────────────────────────────────────────
    Structure:
      - Topbar (above navbar): Midnight Logic bg, white text.
-       Left: email + phone (clickable). Right: social icons.
+       Left: geotag + email + phone (clickable). Right: social icons.
        Hidden on mobile. Disappears on scroll down (only the navbar stays sticky).
      - Navbar (below topbar): white bg, sticky.
        5 nav items + EN/ES toggle + Growth Signal CTA.
@@ -1779,6 +1791,10 @@ const NAV_ITEMS = [{
   label: "Contact",
   href: "/contact"
 }];
+
+// Google Maps link to the Irvine office (reused across footer + contact)
+const MAPS_URL = "https://maps.app.goo.gl/F2Ym733cgFKYhkka6";
+const GEOTAG_LABEL = "Serving Orange County & Beyond";
 const SOCIALS = [{
   label: "Facebook",
   href: "https://www.facebook.com/828MarketingSolutions"
@@ -1847,6 +1863,25 @@ const PhoneIcon = () => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODU
   children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("path", {
     d: "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
   })
+});
+
+// Map pin marker for the geotag
+const MapPinIcon = () => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("svg", {
+  className: "w-3.5 h-3.5",
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2",
+  strokeLinecap: "round",
+  strokeLinejoin: "round",
+  "aria-hidden": "true",
+  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("path", {
+    d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("circle", {
+    cx: "12",
+    cy: "10",
+    r: "3"
+  })]
 });
 const InstagramIcon = () => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("svg", {
   className: "w-4 h-4",
@@ -1940,9 +1975,9 @@ function Navbar({
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
         className: "max-w-7xl mx-auto px-5 sm:px-8 lg:px-12",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
-          className: "flex items-center justify-center lg:justify-between h-10 text-[12px]",
+          className: "flex items-center justify-center lg:grid lg:grid-cols-3 lg:items-center h-10 text-[12px]",
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
-            className: "hidden lg:flex items-center gap-6",
+            className: "hidden lg:flex items-center gap-6 lg:justify-self-start",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("a", {
               href: "mailto:info@828marketingsolutions.com",
               className: "flex items-center gap-2 text-white/85 hover:text-[var(--color-growth-signal)] transition-colors duration-150",
@@ -1957,7 +1992,18 @@ function Navbar({
               })]
             })]
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
-            className: "flex items-center gap-5 lg:gap-4",
+            className: "hidden lg:flex items-center lg:justify-self-center",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("a", {
+              href: MAPS_URL,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: "flex items-center gap-2 text-white/85 hover:text-[var(--color-growth-signal)] transition-colors duration-150",
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(MapPinIcon, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+                children: GEOTAG_LABEL
+              })]
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+            className: "flex items-center gap-5 lg:gap-4 lg:justify-self-end",
             children: SOCIALS.map(({
               label,
               href
@@ -2025,7 +2071,7 @@ function Navbar({
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("a", {
               href: "/contact",
               className: "group inline-flex items-center gap-2 bg-[var(--color-growth-signal)] text-[var(--color-midnight-logic)] px-5 py-2.5 rounded-sm font-body font-medium text-[13px] uppercase tracking-[0.05em] hover:brightness-95 transition-all duration-200",
-              children: ["Book a Strategy Call", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+              children: ["BUILD MY GROWTH PLAN", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
                 className: "transform transition-transform duration-200 group-hover:translate-x-0.5",
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(ArrowRight, {})
               })]
@@ -2089,6 +2135,12 @@ function Navbar({
             }, label)), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
               className: "mt-4 pt-4 px-2 border-t border-[rgba(26,28,41,0.1)] space-y-3",
               children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("a", {
+                href: MAPS_URL,
+                target: "_blank",
+                rel: "noopener noreferrer",
+                className: "flex items-center gap-2 text-sm text-[var(--color-midnight-logic)] hover:text-[var(--color-growth-signal)]",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(MapPinIcon, {}), " ", GEOTAG_LABEL]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("a", {
                 href: "mailto:manuel@828marketingsolutions.com",
                 className: "flex items-center gap-2 text-sm text-[var(--color-midnight-logic)] hover:text-[var(--color-growth-signal)]",
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(MailIcon, {}), " info@828marketingsolutions.com"]
@@ -2114,7 +2166,7 @@ function Navbar({
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("a", {
               href: "/contact",
               className: "mt-4 mx-2 inline-flex items-center justify-center gap-2 bg-[var(--color-growth-signal)] text-[var(--color-midnight-logic)] px-5 py-3 rounded-sm font-body font-medium text-[13px] uppercase tracking-[0.05em]",
-              children: ["Book a Strategy Call", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(ArrowRight, {})]
+              children: ["BUILD MY GROWTH PLAN", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(ArrowRight, {})]
             })]
           })
         })]

@@ -5,7 +5,7 @@
  * Per brief v2-Final Section 7.5:
  *   Hero headline: "Let's find out what the market is seeing."
  *   Subhead: "Book a free strategy call. No pitch. Just the diagnosis."
- *   Two columns: Left = TidyCal embed. Right = ContactForm with growth-challenge.
+ *   ContactForm with growth-challenge.
  *   Below: address, phone, email, Google Maps embed.
  */
 
@@ -16,13 +16,6 @@ get_header();
 // Leave as '' to use solid Midnight Logic + circuit-pattern fallback.
 // ───────────────────────────────────────────────────────────────────────────
 $hero_bg_url = '/wp-content/uploads/2026/05/HomePageHero-scaled.png';
-
-// ───────────────────────────────────────────────────────────────────────────
-// TidyCal — Manuel will provide the actual booking page URL.
-// Existing 828 calendar should be embedded here.
-// Update when Manuel provides the URL or embed code.
-// ───────────────────────────────────────────────────────────────────────────
-$tidycal_url = 'https://tidycal.com/828marketingsolutions'; // PLACEHOLDER
 ?>
 
 <main>
@@ -55,57 +48,22 @@ $tidycal_url = 'https://tidycal.com/828marketingsolutions'; // PLACEHOLDER
 
 
   <!-- ═══════════════════════════════════════════════════════════════════════
-       TWO COLUMNS — TidyCal (left) + ContactForm (right)
+       CONTACT FORM
        ═══════════════════════════════════════════════════════════════════════ -->
   <section class="bg-[var(--color-paper-soft)] py-20 lg:py-24">
-    <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-start">
+    <div class="max-w-3xl mx-auto px-5 sm:px-8 lg:px-12">
 
-        <!-- LEFT: TidyCal embed -->
-        <div>
-          <div class="mb-6">
-            <p class="eyebrow eyebrow-blue mb-3">Option 1</p>
-            <h2 class="font-display font-bold text-2xl lg:text-3xl text-[var(--color-midnight-logic)] mb-3">
-              Book directly.
-            </h2>
-            <p class="text-base text-[var(--color-metric-steel)] leading-relaxed">
-              Pick a time on the calendar. We'll send a confirmation and a Zoom link. 30 minutes.
-            </p>
-          </div>
-
-          <!-- TidyCal embed container -->
-          <div class="bg-white rounded-sm border border-[rgba(26,28,41,0.1)] shadow-sm overflow-hidden">
-            <iframe
-              src="<?php echo esc_url($tidycal_url); ?>"
-              width="100%"
-              height="700"
-              frameborder="0"
-              style="border: 0; display: block;"
-              title="Book a strategy call with 828 Marketing Solutions"
-              loading="lazy"
-            ></iframe>
-          </div>
-
-          <p class="mt-4 text-xs text-[var(--color-metric-steel)]">
-            Powered by TidyCal. Your booking creates a calendar invite delivered to your inbox.
-          </p>
-        </div>
-
-        <!-- RIGHT: ContactForm -->
-        <div>
-          <div class="mb-6">
-            <p class="eyebrow eyebrow-blue mb-3">Option 2</p>
-            <h2 class="font-display font-bold text-2xl lg:text-3xl text-[var(--color-midnight-logic)] mb-3">
-              Or send us a message.
-            </h2>
-            <p class="text-base text-[var(--color-metric-steel)] leading-relaxed">
-              Tell us what you're working on. We'll get back within one business day.
-            </p>
-          </div>
-
-          <div class="render-contact-form"></div>
-        </div>
+      <div class="text-center mb-8 max-w-2xl mx-auto">
+        <p class="eyebrow eyebrow-blue mb-3">Send us a message</p>
+        <h2 class="font-display font-bold text-3xl lg:text-4xl text-[var(--color-midnight-logic)] mb-3">
+          Tell us what you're working on.
+        </h2>
+        <p class="text-base text-[var(--color-metric-steel)] leading-relaxed">
+          We'll get back to you within one business day.
+        </p>
       </div>
+
+      <div class="render-contact-form"></div>
     </div>
   </section>
 

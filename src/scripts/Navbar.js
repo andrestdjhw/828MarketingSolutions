@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react"
    ─────────────────────────────────────────────────────────────────────────
    Structure:
      - Topbar (above navbar): Midnight Logic bg, white text.
-       Left: email + phone (clickable). Right: social icons.
+       Left: geotag + email + phone (clickable). Right: social icons.
        Hidden on mobile. Disappears on scroll down (only the navbar stays sticky).
      - Navbar (below topbar): white bg, sticky.
        5 nav items + EN/ES toggle + Growth Signal CTA.
@@ -19,6 +19,10 @@ const NAV_ITEMS = [
   { label: "About",       href: "/about" },
   { label: "Contact",     href: "/contact" },
 ]
+
+// Google Maps link to the Irvine office (reused across footer + contact)
+const MAPS_URL = "https://maps.app.goo.gl/F2Ym733cgFKYhkka6"
+const GEOTAG_LABEL = "Serving Orange County & Beyond"
 
 const SOCIALS = [
   { label: "Facebook",  href: "https://www.facebook.com/828MarketingSolutions" },
@@ -46,6 +50,14 @@ const MailIcon = () => (
 const PhoneIcon = () => (
   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+  </svg>
+)
+
+// Map pin marker for the geotag
+const MapPinIcon = () => (
+  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+    <circle cx="12" cy="10" r="3" />
   </svg>
 )
 
@@ -116,7 +128,7 @@ function Navbar({ logoUrl, homeUrl = "/" }) {
     <>
       {/* ═══ TOPBAR — Midnight Logic, disappears on scroll
             On mobile: only social icons (centered).
-            On desktop (lg+): email + phone (left) + social icons (right).
+            On desktop (lg+): email + phone (left) + geotag (center) + social icons (right).
             Lives outside the sticky element so it scrolls away naturally. ═══ */}
       <div
         className={`block bg-[var(--color-midnight-logic)] text-white overflow-hidden transition-all duration-300 ${
@@ -125,10 +137,10 @@ function Navbar({ logoUrl, homeUrl = "/" }) {
         aria-hidden={scrolled}
       >
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-          <div className="flex items-center justify-center lg:justify-between h-10 text-[12px]">
+          <div className="flex items-center justify-center lg:grid lg:grid-cols-3 lg:items-center h-10 text-[12px]">
 
             {/* LEFT: email + phone — DESKTOP ONLY */}
-            <div className="hidden lg:flex items-center gap-6">
+            <div className="hidden lg:flex items-center gap-6 lg:justify-self-start">
               <a
                 href="mailto:info@828marketingsolutions.com"
                 className="flex items-center gap-2 text-white/85 hover:text-[var(--color-growth-signal)] transition-colors duration-150"
@@ -146,8 +158,21 @@ function Navbar({ logoUrl, homeUrl = "/" }) {
               </a>
             </div>
 
+            {/* CENTER: geotag — DESKTOP ONLY */}
+            <div className="hidden lg:flex items-center lg:justify-self-center">
+              <a
+                href={MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-white/85 hover:text-[var(--color-growth-signal)] transition-colors duration-150"
+              >
+                <MapPinIcon />
+                <span>{GEOTAG_LABEL}</span>
+              </a>
+            </div>
+
             {/* RIGHT (desktop) / CENTER (mobile): social icons */}
-            <div className="flex items-center gap-5 lg:gap-4">
+            <div className="flex items-center gap-5 lg:gap-4 lg:justify-self-end">
               {SOCIALS.map(({ label, href }) => {
                 const Icon = SOCIAL_ICONS[label]
                 return (
@@ -240,7 +265,7 @@ function Navbar({ logoUrl, homeUrl = "/" }) {
                 href="/contact"
                 className="group inline-flex items-center gap-2 bg-[var(--color-growth-signal)] text-[var(--color-midnight-logic)] px-5 py-2.5 rounded-sm font-body font-medium text-[13px] uppercase tracking-[0.05em] hover:brightness-95 transition-all duration-200"
               >
-                Book a Strategy Call
+                BUILD MY GROWTH PLAN
                 <span className="transform transition-transform duration-200 group-hover:translate-x-0.5">
                   <ArrowRight />
                 </span>
@@ -290,6 +315,9 @@ function Navbar({ logoUrl, homeUrl = "/" }) {
 
               {/* Mobile contact links (visible only when menu is open) */}
               <div className="mt-4 pt-4 px-2 border-t border-[rgba(26,28,41,0.1)] space-y-3">
+                <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-[var(--color-midnight-logic)] hover:text-[var(--color-growth-signal)]">
+                  <MapPinIcon /> {GEOTAG_LABEL}
+                </a>
                 <a href="mailto:manuel@828marketingsolutions.com" className="flex items-center gap-2 text-sm text-[var(--color-midnight-logic)] hover:text-[var(--color-growth-signal)]">
                   <MailIcon /> info@828marketingsolutions.com
                 </a>
@@ -309,7 +337,7 @@ function Navbar({ logoUrl, homeUrl = "/" }) {
                 href="/contact"
                 className="mt-4 mx-2 inline-flex items-center justify-center gap-2 bg-[var(--color-growth-signal)] text-[var(--color-midnight-logic)] px-5 py-3 rounded-sm font-body font-medium text-[13px] uppercase tracking-[0.05em]"
               >
-                Book a Strategy Call
+                BUILD MY GROWTH PLAN
                 <ArrowRight />
               </a>
             </nav>

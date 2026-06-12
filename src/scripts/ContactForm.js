@@ -22,9 +22,14 @@ import React, { useState, useEffect } from "react"
 
    Field mapping confirmed with Manuel Luna (May 2026):
      - Standard properties:  firstname, lastname, company, phone, email,
-                             website, city, state, message
-     - Custom properties:    service_interest, annual_revenue_range,
-                             biggest_growth_challenge, growth_challenge__other
+                             website, city, message
+     - Custom properties:    service_interest, biggest_growth_challenge,
+                             growth_challenge__other
+
+   CHANGE (June 2026): `annual_revenue_range` and `state` removed. Manuel
+   pruned both from the HubSpot form after a lead analysis showed prospects
+   were dropping off the form on those two fields. The React form below now
+   matches the live HubSpot form exactly.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 // ─── HubSpot config ──────────────────────────────────────────────────────
@@ -102,19 +107,6 @@ const SERVICE_INTERESTS = [
   "Pitch Deck & Capabilities Development",
 ]
 
-// Use explicit ASCII hyphen-minus (U+002D) via escape sequences to prevent
-// any editor / build-tool smart-punctuation from silently converting "-" into
-// "-" (en dash U+2013) or "-" (em dash U+2014). HubSpot does byte-for-byte
-// string matching on enumeration values, so even a single visually-identical
-// character mismatch causes a REQUIRED_FIELD validation error.
-const H = "\u002D" // ASCII hyphen-minus
-const REVENUE_RANGES = [
-  `0 ${H} 250K`,
-  `250K ${H} 500K`,
-  `500K ${H} 1M`,
-  `1M+`,
-]
-
 const GROWTH_CHALLENGES = [
   "Not enough leads coming in",
   "Customers don't know who we are",
@@ -162,9 +154,7 @@ function ContactForm() {
     email:                     "",
     website:                   "",
     service_interest:          "",
-    annual_revenue_range:      "",
     city:                      "",
-    state:                     "",
     biggest_growth_challenge:  [],
     growth_challenge__other:   "",
     message:                   "",
@@ -204,10 +194,8 @@ function ContactForm() {
 
     if (!validateUrl(form.website))     e.website = "Enter a valid URL"
 
-    if (!form.service_interest)          e.service_interest     = "Select a service interest"
-    if (!form.annual_revenue_range)      e.annual_revenue_range = "Select a revenue range"
+    if (!form.service_interest)          e.service_interest = "Select a service interest"
     if (!form.city.trim())               e.city  = "City is required"
-    if (!form.state.trim())              e.state = "State/region is required"
 
     if (!form.biggest_growth_challenge.length) {
       e.biggest_growth_challenge = "Select at least one"
@@ -266,9 +254,7 @@ function ContactForm() {
       { objectTypeId: "0-1", name: "phone",                    value: form.phone.trim()     },
       { objectTypeId: "0-1", name: "email",                    value: form.email.trim()     },
       { objectTypeId: "0-1", name: "service_interest",         value: form.service_interest },
-      { objectTypeId: "0-1", name: "annual_revenue_range",     value: form.annual_revenue_range },
       { objectTypeId: "0-1", name: "city",                     value: form.city.trim()      },
-      { objectTypeId: "0-1", name: "state",                    value: form.state.trim()     },
       // Multi-checkbox: HubSpot expects semicolon-joined string for enumeration
       // properties of type "checkbox" (multi-select)
       { objectTypeId: "0-1", name: "biggest_growth_challenge", value: form.biggest_growth_challenge.join(";") },
@@ -476,16 +462,6 @@ function ContactForm() {
           />
         </Field>
 
-        <Field label="Annual Revenue Range" required error={errors.annual_revenue_range}>
-          <SelectInput
-            value={form.annual_revenue_range}
-            onChange={(v) => update("annual_revenue_range", v)}
-            options={REVENUE_RANGES}
-            disabled={isSubmitting}
-            placeholder="Select…"
-          />
-        </Field>
-
         <Field label="City" required error={errors.city}>
           <input
             type="text"
@@ -494,17 +470,6 @@ function ContactForm() {
             className={inputClass}
             disabled={isSubmitting}
             autoComplete="address-level2"
-          />
-        </Field>
-
-        <Field label="State/Region" required error={errors.state}>
-          <input
-            type="text"
-            value={form.state}
-            onChange={(e) => update("state", e.target.value)}
-            className={inputClass}
-            disabled={isSubmitting}
-            autoComplete="address-level1"
           />
         </Field>
       </div>
