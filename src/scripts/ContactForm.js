@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   828 CONTACT FORM v3 - Custom React form → HubSpot Forms API
+   828 CONTACT FORM v4.2 - Custom React form → HubSpot Forms API
    ─────────────────────────────────────────────────────────────────────────
    Posts directly to:
      https://api.hsforms.com/submissions/v3/integration/submit/{portal}/{form}
@@ -30,6 +30,24 @@ import React, { useState, useEffect } from "react"
    pruned both from the HubSpot form after a lead analysis showed prospects
    were dropping off the form on those two fields. The React form below now
    matches the live HubSpot form exactly.
+
+   CHANGE (Aug 2026) — AD ATTRIBUTION: the form was creating leads with no
+   trace of the campaign that produced them. Two additions:
+     a) UTM params are read from the URL on mount and cached in
+        sessionStorage, so they survive the landing → /contact navigation.
+        On submit they are sent as explicit contact properties.
+     b) The HubSpot tracking cookie (`hubspotutk`) is sent as `context.hutk`,
+        which is what lets HubSpot stitch the submission to the visitor's
+        session and original source.
+
+   ⚠ TWO PREREQUISITES OUTSIDE THIS FILE — without them the code runs but
+     the data does not land:
+     1. The HubSpot tracking code must be installed site-wide (wp_head).
+        Until then `hubspotutk` never exists and `hutk` is simply omitted.
+     2. The properties utm_source / utm_medium / utm_campaign / utm_content /
+        utm_id must exist in the HubSpot portal AND be added to this form.
+        HubSpot returns HTTP 400 for unknown field names — the exact failure
+        mode we hit before with disallowed `context` keys.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 // ─── HubSpot config ──────────────────────────────────────────────────────
@@ -43,6 +61,80 @@ const HS_SUBMIT_URL = `https://api.hsforms.com/submissions/v3/integration/submit
 // This key is PUBLIC - safe to commit. The matching SECRET key never appears
 // here; it would only be needed for server-side verification (future step).
 const RECAPTCHA_SITE_KEY = "6LcLuPksAAAAAIkNHnaGokVVZ3JUVpjG935eF4Q5"
+
+// ─── UTM capture config ──────────────────────────────────────────────────
+// Each key here must match a HubSpot contact property name EXACTLY.
+// `utm_term` is intentionally left out: it is only useful for Search
+// campaigns and the property does not exist in the portal yet. Add it to
+// this array ONLY after creating it in HubSpot and adding it to the form.
+const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_id"]
+const UTM_STORAGE_KEY = "828_utm_params"
+
+// Reads UTMs off the current URL and caches them for the rest of the session.
+// Why sessionStorage: the ad lands the visitor on the home page or a service
+// page, but they submit from /contact. Without caching, the params are gone
+// by the time the form is posted and every lead looks like direct traffic.
+function captureUtmParams() {
+  if (typeof window === "undefined") return
+
+  const params = new URLSearchParams(window.location.search)
+  const found = {}
+
+  UTM_KEYS.forEach((key) => {
+    const value = params.get(key)
+    if (value) found[key] = value
+  })
+
+  // Only overwrite when this pageview actually carries UTMs, so an internal
+  // navigation without params doesn't wipe the original attribution.
+  if (Object.keys(found).length > 0) {
+    try {
+      sessionStorage.setItem(UTM_STORAGE_KEY, JSON.stringify(found))
+    } catch {
+      // Private mode / storage disabled — attribution is lost but the form
+      // must keep working. Never let this throw into the render path.
+    }
+  }
+}
+
+function getStoredUtmParams() {
+  if (typeof window === "undefined") return {}
+  try {
+    const raw = sessionStorage.getItem(UTM_STORAGE_KEY)
+    return raw ? JSON.parse(raw) : {}
+  } catch {
+    return {}
+  }
+}
+
+// Reads the HubSpot tracking cookie. Anchored to a cookie boundary so a
+// different cookie whose name merely ends in "hubspotutk" can't match.
+// Returns "" when the tracking code isn't installed yet.
+function getHubspotCookie() {
+  if (typeof document === "undefined") return ""
+  const match = document.cookie.match(/(?:^|;\s*)hubspotutk=([^;]+)/)
+  return match ? match[1] : ""
+}
+
+// ─── Meta (Facebook) Pixel — Lead conversion event ───────────────────────
+// The pixel base code (installed site-wide via WP Code) only fires PageView.
+// Without this call Meta sees the traffic but never learns which visits
+// turned into a lead, so campaign optimization has nothing to optimize on.
+//
+// `fbq` is defined by the base code. We check for it every time instead of
+// assuming: the script is third-party and can be blocked by an ad blocker,
+// a consent tool, or a network failure. A missing pixel must never break a
+// real form submission — the lead is worth more than the analytics event.
+function trackMetaLead() {
+  if (typeof window === "undefined") return
+  if (typeof window.fbq !== "function") return
+
+  try {
+    window.fbq("track", "Lead")
+  } catch {
+    // Swallow: analytics must never surface as an error to the visitor.
+  }
+}
 
 // ─── reCAPTCHA loader ────────────────────────────────────────────────────
 // Module-level promise so multiple ContactForm instances on the same page
@@ -177,6 +269,11 @@ function ContactForm() {
     loadRecaptcha().catch(() => { /* silently fail; submit will retry */ })
   }, [])
 
+  // Capture ad attribution as early as possible in the session.
+  useEffect(() => {
+    captureUtmParams()
+  }, [])
+
   const isSubmitting = status === "submitting"
 
   // ─── Validation ───────────────────────────────────────────────────
@@ -282,13 +379,31 @@ function ContactForm() {
       value: form.consent ? "true" : "false",
     })
 
-    const payload = {
-      fields,
-      context: {
-        pageUri:   typeof window !== "undefined" ? window.location.href     : "",
-        pageName:  typeof document !== "undefined" ? document.title         : "",
-      },
+    // ─── Ad attribution: UTMs cached earlier in the session ──────────
+    // Only keys that actually have a value get pushed, so an organic visit
+    // never sends empty utm_* properties and overwrite good data.
+    const utmParams = getStoredUtmParams()
+    Object.entries(utmParams).forEach(([key, value]) => {
+      if (UTM_KEYS.includes(key) && value) {
+        fields.push({ objectTypeId: "0-1", name: key, value })
+      }
+    })
+
+    // ─── Context ────────────────────────────────────────────────────
+    // HubSpot only accepts a closed list of keys here and 400s on anything
+    // else — including, in practice, an empty `hutk`. So the cookie is added
+    // conditionally: present once the tracking code is installed, absent
+    // (and harmless) until then.
+    const context = {
+      pageUri:   typeof window !== "undefined" ? window.location.href     : "",
+      pageName:  typeof document !== "undefined" ? document.title         : "",
     }
+
+    const hutk = getHubspotCookie()
+    if (hutk) context.hutk = hutk
+
+    const payload = { fields, context }
+
     // Note on reCAPTCHA: we still generate `recaptchaToken` above (kept for
     // server-side validation if/when we add the WP handler), but we don't
     // attach it to the HubSpot payload. HubSpot v3 only accepts a closed
@@ -298,11 +413,10 @@ function ContactForm() {
     // The score is visible per-day there even without server-side check.
     void recaptchaToken
 
-    // ─── DEBUG: log exact payload being sent ─────────────────────
-    // Remove this once submissions are confirmed working in production.
-    console.log("[ContactForm] === SUBMIT PAYLOAD ===")
-    console.log("[ContactForm] URL:", HS_SUBMIT_URL)
-    console.log("[ContactForm] Body:", JSON.stringify(payload, null, 2))
+    // NOTE: the debug payload dump that lived here was removed once UTM
+    // attribution was verified in production (Aug 2026). It printed every
+    // lead's email and phone into the browser console on the live site.
+    // If you need it again, re-add it temporarily and strip it before deploy.
 
     try {
       const res = await fetch(HS_SUBMIT_URL, {
@@ -325,6 +439,11 @@ function ContactForm() {
         const allMessages = errBody?.errors?.map((e) => e.message).filter(Boolean).join(" · ")
         throw new Error(allMessages || errBody?.message || `HubSpot returned ${res.status}`)
       }
+
+      // Fire the Meta conversion only after HubSpot confirms the lead was
+      // accepted. Firing it before the response (or on validation failure)
+      // would inflate the conversion count and skew campaign optimization.
+      trackMetaLead()
 
       setStatus("success")
     } catch (err) {
